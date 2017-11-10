@@ -1,0 +1,44 @@
+.login-basic-form {
+    width: 532px;
+    left: 50%;
+    position: absolute;
+    margin-left: -266px;
+    top: 50%;
+    margin-top: -76px;
+}
+
+
+.ie9-menu {
+    position: absolute;
+    left:0px;
+}
+
+.ie9-main {
+    margin-left: 200px;
+}
+
+.undefined-cells>.kuma-uxtable-cell>.kuma-uxtable-expand-icon {
+    position: absolute;
+    line-height: 50px;
+}
+
+.undefined-cells>.kuma-uxtable-cell {
+   
+   border-right: 1px solid #e8e8e8;
+}
+.undefined-cells {
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.fillParent {
+    width: auto;
+}
+
+.ie9-colorBar>label,
+.ie9-colorBar>div{
+    float:left;
+}
+
+ie9-circuitCell>div{
+    float:left;
+}

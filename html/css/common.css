@@ -1,0 +1,805 @@
+/* 父元素-flex容器 */
+.flex {
+    display: box;              /* OLD - Android 4.4- */
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+/* 子元素-平均分栏 */
+.fillParent {
+    -webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-flex: 1;         /* OLD - Firefox 19- */
+    width: 100%;               /* For old syntax, otherwise collapses. */
+    -webkit-flex: 1;          /* Chrome */
+    -ms-flex: 1;              /* IE 10 */
+    flex: 1;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    -ms-box-flex: 1;
+}
+
+/* 父元素-横向排列（主轴） */
+.flex-direction-row {
+    /* 09版 */
+    -webkit-box-orient: horizontal;
+     /* 12版 */
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    -o-flex-direction: row;
+    flex-direction: row;
+}
+
+/* 父元素-纵向排列（主轴） */
+.flex-direction-column {
+    /* 09版 */
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    /* 12版 */
+    -webkit-flex-direction: column;
+    -moz-box-orient:vertical;
+    -moz-box-direction:normal;
+    -ms-flex-direction: column;
+    -o-flex-direction: column;
+    flex-direction: column;
+}
+
+/* 父元素-横向换行 */
+.flex-wrap {
+    /* 09版 */
+    /*-webkit-box-lines: multiple;*/
+    /* 12版 */
+    -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.flex-nowrap {
+    /* 09版 */
+    /*-webkit-box-lines: multiple;*/
+    /* 12版 */
+    -webkit-flex-wrap: nowrap;
+    -moz-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    -o-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+}
+
+/* 父元素-水平居中（主轴是横向才生效） */
+.flex-justify-content-center {
+    /* 09版 */
+    -webkit-box-pack: center;
+    /* 12版 */
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
+    -o-justify-content: center;
+    justify-content: center;
+}
+
+.flex-justify-content-flex-start {
+    /* 09版 */
+    -webkit-box-pack: flex-start;
+    /* 12版 */
+    -webkit-justify-content: flex-start;
+    -moz-justify-content: flex-start;
+    -ms-justify-content: flex-start;
+    -o-justify-content: flex-start;
+    justify-content: flex-start;
+}
+
+.flex-justify-content-flex-end {
+    /* 09版 */
+    -webkit-box-pack: flex-end;
+    /* 12版 */
+    -webkit-justify-content: flex-end;
+    -moz-justify-content: flex-end;
+    -ms-justify-content: flex-end;
+    -o-justify-content: flex-end;
+    justify-content: flex-end;
+}
+
+.flex-justify-content-space-around {
+    /* 09版 */
+    -webkit-box-pack: space-around;
+    /* 12版 */
+    -webkit-justify-content: space-around;
+    -moz-justify-content: space-around;
+    -ms-justify-content: space-around;
+    -o-justify-content: space-around;
+    justify-content: space-around;
+}
+
+.flex-justify-content-space-between {
+    /* 09版 */
+    -webkit-box-pack: space-between;
+    /* 12版 */
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    -o-justify-content: space-between;
+    justify-content: space-between;
+}
+
+/* 父元素-竖直居中（主轴是横向才生效）  */
+.flex-align-items-center {
+    /* 09版 */
+    -webkit-box-align: center;
+    /* 12版 */
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    -o-align-items: center;
+    align-items: center;
+    box-align:center;
+    text-align: center;
+}
+
+.flex-align-items-flex-start {
+    /* 09版 */
+    -webkit-box-align: flex-start;
+    /* 12版 */
+    -webkit-align-items: flex-start;
+    -moz-align-items: flex-start;
+    -ms-align-items: flex-start;
+    -o-align-items: flex-start;
+    align-items: flex-start;
+}
+
+.flex-align-items-flex-end {
+    /* 09版 */
+    -webkit-box-align: flex-end;
+    /* 12版 */
+    -webkit-align-items: flex-end;
+    -moz-align-items: flex-end;
+    -ms-align-items: flex-end;
+    -o-align-items: flex-end;
+    align-items: flex-end;
+}
+
+/* 子元素-显示在从左向右（从上向下）第1个位置，用于改变源文档顺序显示 */
+.flex-group-0 {
+    -webkit-box-ordinal-group: 0;   /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-ordinal-group: 0;      /* OLD - Firefox 19- */
+    -ms-flex-order: 0;              /* TWEENER - IE 10 */
+    -webkit-order: 0;               /* NEW - Chrome */
+    order: 0;                       /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+.flex-group-1 {
+    -webkit-box-ordinal-group: 1;   /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-ordinal-group: 1;      /* OLD - Firefox 19- */
+    -ms-flex-order: 1;              /* TWEENER - IE 10 */
+    -webkit-order: 1;               /* NEW - Chrome */
+    order: 1;                       /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+/* 子元素-显示在从左向右（从上向下）第2个位置，用于改变源文档顺序显示 */
+.flex-group-2 {
+    -webkit-box-ordinal-group: 2;   /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-ordinal-group: 2;      /* OLD - Firefox 19- */
+    -ms-flex-order: 2;              /* TWEENER - IE 10 */
+    -webkit-order: 2;               /* NEW - Chrome */
+    order: 2;                       /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+.flex-shrink-0 {
+    -webkit-box-flex: 0;
+    -moz-flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+    -ms-flex-shrink:0;
+}
+
+.flex-grow-0 {
+    -webkit-box-flex: 0;
+    -moz-flex-grow: 0;
+    -webkit-flex-grow: 0;
+    flex-grow: 0;
+    -ms-flex-grow:0;
+}
+.flex-grow-1 {
+    -webkit-box-flex: 1;
+    -moz-flex-grow: 1;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    -ms-flex-grow:1;
+}
+.flex-grow-2 {
+    -webkit-box-flex: 2;
+    -moz-flex-grow: 2;
+    -webkit-flex-grow: 2;
+    flex-grow: 2;
+    -ms-flex-grow:2;
+}
+
+.flex-shrink-1 {
+    -webkit-box-flex: 1;
+    -moz-flex-shrink: 1;
+    -webkit-flex-shrink: 1;
+    flex-shrink: 1;
+}
+
+.height-hundred-percent {
+    height: 100%;
+}
+
+.flex1 {
+    -webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-flex: 1;         /* OLD - Firefox 19- */
+    width: 100%;               /* For old syntax, otherwise collapses. */
+    -webkit-flex: 1;          /* Chrome */
+    -ms-flex: 1;              /* IE 10 */
+    flex: 1;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+.fr-row {
+    display: box;              /* OLD - Android 4.4- */
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+   /* 09版 */
+    -webkit-box-orient: horizontal;
+    /* 12版 */
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    -o-flex-direction: row;
+    flex-direction: row;
+    width: 100%;
+}
+
+/* 修改框架menu样式*/
+.kuma-menu-inline, .kuma-menu-vertical {
+    padding:0px;
+}
+
+/* a标签点击不出现 横线 */
+a:link,
+a:visited,
+a:hover
+ {
+    text-decoration: none; 
+}
+
+.custom-table .kuma-uxtable-cell,
+.long-table .kuma-uxtable-cell {
+    text-align: center!important;
+    padding: 0px!important;
+    font-size: 12px;
+    height: 25px;
+    line-height: 25px;
+}
+
+.custom-table .kuma-uxtable-cell .kuma-select2,
+.long-table .kuma-uxtable-cell .kuma-select2 {
+    margin-top:0px;
+}
+.custom-table .kuma-select2-selection--single,
+.long-table .kuma-select2-selection--single,
+.custom-table .kuma-select2-selection--single .kuma-select2-selection__rendered,
+.long-table .kuma-select2-selection--single .kuma-select2-selection__rendered
+ {
+    line-height:25px;
+    height: 25px;
+}
+
+.long-table .kuma-uxtable-cell>div,
+.custom-table .kuma-uxtable-cell>div {
+    height: 25px;
+}
+
+.common-input {
+    vertical-align: middle;
+    border: 1px solid rgba(31,56,88,.4);
+    color: rgba(0,0,0,.6);
+    outline: 0;
+    padding: 5px 10px;
+    height: 36px;
+    line-height: 26px;
+    width: 100%;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    font-size: 12px;
+    color: rgba(0,0,0,.8);
+    box-sizing: border-box;
+}
+
+.custom-table .kuma-tab-bottom .kuma-tab-nav-scroll, .custom-table .kuma-tab-top .kuma-tab-nav-scroll {
+    width: 100%;
+}
+
+.custom-table .kuma-uxtable-main-table {
+    overflow-x: auto;
+    -ms-overflow-x: auto;
+}
+
+.custom-table .kuma-uxtable-header,
+.long-table .kuma-uxtable-header {
+    font-weight: normal;
+    
+}
+
+.long-table .kuma-uxtable-main-table > .kuma-uxtable-header-wrapper,
+.long-table .kuma-uxtable-main-table > .kuma-uxtable-header-wrapper > .kuma-uxtable-header-scroll,
+.long-table .kuma-uxtable-main-table > .kuma-uxtable-body-wrapper,
+.long-table .kuma-uxtable-main-table > .kuma-uxtable-body-wrapper >.kuma-uxtable-body-scroll {
+    display: inline-block;
+    width: 100%;
+}
+
+.custom-table .kuma-uxtable-main-table>.kuma-uxtable-header-wrapper,
+.custom-table .kuma-uxtable-main-table>.kuma-uxtable-header-wrapper>.kuma-uxtable-header-scroll {
+    width: 100%;
+}
+
+.custom-kuma-input,.custom-kuma-input .kuma-input,
+.long-table .kuma-input,
+.custom-table .kuma-input
+ {
+    height:25px;
+    padding:0px;
+}
+
+.custom-kuma-button,.custom-table .kuma-uxtable>.kuma-uxtable-actionbar>.kuma-button {
+    height:25px;
+    line-height:25px;
+}
+
+.custom-table .kuma-page-jump-next, 
+.custom-table .kuma-page-jump-prev, 
+.custom-table .kuma-page-next, 
+.custom-table .kuma-page-prev,
+.custom-table .kuma-page-item,
+.custom-table .kuma-select2-selection--single {
+    height: 25px;
+    line-height: 25px;
+}
+
+.long-table .kuma-uxtable-header-group-name {
+    height: 25px;
+    line-height: 25px;
+}
+
+.custom-table .kuma-uxtable-page {
+    padding:5px 0px 0px 0px;
+}
+
+.long-table .kuma-empty-data {
+    display: none;
+}
+
+.kuma-uxtable-header-scroll {
+    overflow:auto;
+}
+
+.kuma-input[disabled], .kuma-input[readonly], .kuma-textarea[disabled], .kuma-textarea[readonly] {
+    background-color: gray;
+    cursor:not-allowed;
+}
+
+.nbackform .kuma-input[disabled]{
+    background-color: transparent;
+    cursor:not-allowed;
+}
+
+.custom-form .kuma-uxform-field {
+    padding: 12px 5px 12px 0;
+}
+
+.nopaddding-form {
+    background-color: rgb(64, 81, 107);
+}
+
+.nopaddding-form .kuma-uxform-field {
+    padding: 5px 0px 5px 0px;
+}
+
+.nopaddding-form .kuma-uxform-row {
+    border-bottom: 1px solid #dddddd;
+}
+
+.blue-search {
+    background-color: rgb(64,81,107);
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.paddding5-search .kuma-uxform-field {
+    padding: 5px 0px 5px 0px;
+}
+
+.paddding5-search .kuma-label {
+    width: 150px;
+}
+
+.nopaddding-search .kuma-uxform-field {
+    padding: 0px;
+}
+
+.blue-search .kuma-uxcrumbs a,
+.blue-search .kuma-uxcrumbs span
+ {
+   height: 26px;
+    line-height: 26px;
+    font-size: 14px;
+    color:#ffffff;
+}
+
+.blue-search .kuma-uxcrumbs a:before, .blue-search .kuma-uxcrumbs span:before,.blue-search .kuma-uxcrumbs .rightpoint{
+    color:#ffffff;
+}
+
+.kuma-tab-bottom .kuma-tab-nav-scroll, .kuma-tab-top .kuma-tab-nav-scroll {
+    width: 100%;
+}
+
+.kuma-uxtable-header-wrapper {
+    background-color: rgb(245, 245, 245);
+}
+
+
+
+.kuma-uxtable-body-scroll {
+    overflow-y: auto;
+    -ms-overflow-y: auto;
+}
+
+.kuma-uxtable-body,.kuma-uxtable-body-wrapper {
+    min-height: 30px;
+}
+
+.kuma-uxtable-cell {
+    padding:0px;
+    text-align: center!important;
+}
+
+.overflowy {
+    overflow-y: auto;
+    -ms-overflow-y:auto;
+}
+.dialog-mask {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    z-index: 1000;
+}
+
+.kuma-menu-none-border.kuma-menu-inline .kuma-menu-item, .kuma-menu-none-border.kuma-menu-inline .kuma-menu-submenu>.kuma-menu-submenu-title, .kuma-menu-none-border.kuma-menu-vertical .kuma-menu-item, .kuma-menu-none-border.kuma-menu-vertical .kuma-menu-submenu>.kuma-menu-submenu-title {
+    background-color: rgba(31,56,88,.04);
+}
+
+.loadhidden .kuma-upload-filelist {
+    display: none;
+}
+
+.kuma-thereinput-uxform-field .kuma-label {
+    width: 180px;
+    text-align: left;
+}
+
+.padding6 {
+    padding: 0px 5px 6px 0px;
+}
+
+.label150 .kuma-label{
+    width: 150px;
+}
+
+.icon70 .kuma-uxform-right-icon {
+    width: 70px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.searchDiv .kuma-uxtable-searchbar {
+    width: 100%;
+}
+
+.whiteBackground,.whiteBackground .kuma-uxform-left-icon,.whiteBackground .kuma-uxform-right-icon {
+    background-color: #ffffff;
+}
+
+.whiteBackgroundform .kuma-uxform-right-icon {
+    background-color: #ffffff;
+}
+
+.login-basic-form {
+  padding: 20px;  
+}
+.login-basic-form .kuma-label {
+    width: 0px;
+}
+
+.alarm-warning .kuma-dlg-title {
+    margin-left: 20px;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.alarm-click-class .kuma-uxtable-row-cells {
+     background-color: rgba(0, 128, 255, 0.3)!important;
+}
+
+#root>div {
+    height: 100%;
+}
+
+.kuma-uxtable .kuma-uxtable-actionbar {
+    margin:0px;
+    padding:0px;
+    background-color: #ffffff;
+}
+.kuma-uxtable .kuma-uxtable-actionbar button{
+    margin: 10px;
+}
+
+.kuma-uxtable .kuma-uxtable-content {
+    height: 100%;
+    background-color: #ffffff;
+}
+
+.kuma-uxtable .kuma-uxtable-page {
+    background-color: #ffffff;
+}
+
+.kuma-uxtable-cell, .kuma-uxtable-cell>div {
+    height: 30px;
+}
+
+.kuma-uxtable-cell {
+    line-height: 30px;
+}
+
+.first-menu {
+    padding-left: 0px!important;
+}
+
+.first-menu a, .first-menu a:visited {
+    color: #000;
+}
+
+.searchForm {
+    background-color: #ffffff;
+}
+
+.searchForm>.kuma-uxform-row {
+    margin-top: 10px;
+    padding-left: 10px;
+    border-bottom: 1px solid #dddddd;
+}
+.demoForm {
+    background-color: #ffffff;
+}
+
+.uxcore-tree-select-dropdown-right {
+    display: none;
+    width: 0px;
+}
+
+.uxcore-tree-select-dropdown {
+    width: 240px!important;
+    
+}
+
+.uxcore-tree-select-dropdown-left, .uxcore-tree-select-dropdown-right {
+    width: 100%;
+}
+
+.common-circle {
+    border-radius: 100%;
+}
+
+/* 投影方式 X轴偏移量 Y轴偏移量阴影模糊半径 阴影扩展半径 阴影颜色;   */
+.common-shadow {
+    -moz-box-shadow:5px 5px #dddddd;
+    -webkit-box-shadow:5px 5px #dddddd;
+    box-shadow:  5px 5px #dddddd;
+}
+
+.echart-button-click {
+    background-color: #0000FF;
+    border-color: #0000FF;
+    color: #fff;
+}
+
+.echart-button-click:hover{
+    background-color:#0000FF;border-color:#0000FF;color:#fff
+}
+
+.echart-table .kuma-uxtable-body-wrapper,
+.echart-table .kuma-uxtable-body-scroll {
+    height: 400px!important;
+}
+
+.batteryGroup {
+    border:2px solid transparent;
+}
+
+
+.kuma-icon-search {
+    cursor: pointer;
+}
+
+.kuma-menu-inline>.kuma-menu-item, 
+.kuma-menu-inline>.kuma-menu-submenu>.kuma-menu-submenu-title, 
+.kuma-menu-vertical>.kuma-menu-item, .kuma-menu-vertical>.kuma-menu-submenu>.kuma-menu-submenu-title,
+.action-container .action {
+    padding:0px;
+}
+
+.kuma-menu-none-border .menu-item>a{
+    display: flex;
+    padding-left: 14px;
+}
+
+.rightpoint {
+    color: #ffffff;
+}
+
+.rightpoint:before {
+    content: "\e65b";
+    font-size: 10px;
+    font-family: uxcore!important;
+    margin-right: 8px;
+    color: #ffffff;
+}
+
+.batteryGroupClick {
+    border:2px solid #3d3f56!important;
+    box-shadow: 2px 2px 2px!important;
+}
+
+.kuma-menu-item-selected>a {
+    background-color: #1C8FD0;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.kuma-menu-none-border .menu-item > a,
+.kuma-menu-submenu-title
+{
+    color:#5a5b74!important;
+    background-color: #ffffff!important;
+    border-radius: 15px!important;
+    /*margin-top:5px!important;*/
+}
+
+.kuma-menu-none-border.kuma-menu-inline .kuma-menu-sub .kuma-menu-item {
+    border-bottom: 0px solid transparent;
+}
+
+.kuma-menu-sub>li {
+    border-radius: 15px!important;
+}
+
+.kuma-menu-none-border .menu-item.kuma-menu-item-selected > a,
+.kuma-menu-item-selected .kuma-menu-submenu-title {
+    background-color: #FF5C00!important;
+    color:#ffffff!important;
+    margin-right: 0px;
+}
+
+.kuma-menu-submenu-title {
+    width: 110px;
+    margin-left: 25px;
+}
+
+.kuma-menu-none-border .kuma-menu-submenu-open .menu-item > a {
+    margin-top:0px!important;
+}
+
+.kuma-menu-none-border .kuma-menu-submenu-selected .kuma-menu-submenu-title {
+    background-color: #FF5C00!important;
+}
+
+.kuma-menu-submenu-title span {
+    color:#5a5b74!important;
+}
+.kuma-menu-submenu-inline > .kuma-menu-submenu-title::after {
+    display: none;
+}
+.kuma-menu-none-border .kuma-menu-submenu-selected .kuma-menu-submenu-title span{
+    color:#ffffff!important;
+}
+
+.kuma-menu-none-border .kuma-menu-item-selected {
+    font-weight:normal;
+}
+
+.kuma-menu-submenu > .kuma-menu {
+    background-color:transparent!important;
+}
+
+.kuma-menu-none-border.kuma-menu-inline .kuma-menu-item, .kuma-menu-none-border.kuma-menu-inline .kuma-menu-submenu > .kuma-menu-submenu-title, .kuma-menu-none-border.kuma-menu-vertical .kuma-menu-item, .kuma-menu-none-border.kuma-menu-vertical .kuma-menu-submenu > .kuma-menu-submenu-title {
+    line-height: 30px!important;
+    height: 30px!important;
+}
+
+.kuma-menu-submenu-open .kuma-menu-sub {
+    width: 80px;
+    margin-left: 55px;
+}
+
+.kuma-menu-submenu-open .kuma-menu-sub .kuma-menu-item {
+    padding-left: 0px!important;
+}
+
+.kuma-menu-none-border .kuma-menu-item-selected::before {
+    border-left: 0px!important;
+}
+
+.privacyIcon .kuma-icon-privacy {
+    padding-left: 7px;
+}
+
+.kuma-menu-none-border>li {
+    margin-bottom: 16px!important;
+}
+
+.kuma-popover-inner {
+    min-width: 220px;
+}
+
+.uxcore-tree-select-dropdown span.uxcore-tree-select-tree-title {
+    cursor: pointer;
+}
+
+.kuma-calendar-picker.kuma-calendar-picker-placement-bottomLeft{
+    top:inherit!important;
+}
+
+.kuma-page-item:hover{
+    border-color:#FF5C00;
+}
+
+.kuma-page-item-active{
+    background: #FF5C00;
+    border-color: #FF5C00;
+}
+
+.label120 .kuma-label{
+    width: 120px;
+    text-align:center;
+}
+
+.uxicon-left:before {
+    color:#ff7043;
+    font-size: 25px;
+    font-weight:bold;
+}
+
+.label150 .kuma-label{
+    width: 150px;
+    text-align:center;
+}
+
+.kuma-uxform-field .kuma-other-uxform-field .area{
+    margin-left: 15px;
+    width: 25%;
+    display: table;
+}
+
+.use-svg .uxcore-tree-select-tree-switcher.uxcore-tree-select-tree-switcher_open{
+    background: url(./uxcore/TB1IvveJVXXXXbcXFXXXXXXXXXX-14-10.svg) 50% 50% no-repeat;
+    background-size: 50% auto;
+}
+
+.use-svg .uxcore-tree-select-tree-switcher.uxcore-tree-select-tree-switcher_close {
+    background: url(./uxcore/TB17BHzJVXXXXXEXXXXXXXXXXXX-10-14.svg) 50% 50% no-repeat;
+    background-size: auto 50%;
+}
+
+.label50 .kuma-label {
+    width: 50px;
+    text-align: center;
+}
