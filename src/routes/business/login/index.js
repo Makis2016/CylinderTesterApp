@@ -82,7 +82,7 @@ export default class Index extends React.Component {
                                 </FormRow>
                                 <FormRow className="flex fillParent flex-align-items-center flex-justify-content-center">
                                     <OtherFormField className="flex fillParent flex-align-items-center flex-justify-content-center">
-                                        <Button size="large" onClick={() => this._handleLogin()}>登录1</Button>
+                                        <Button size="large" onClick={() => this._handleLogin()}>登录</Button>
                                     </OtherFormField>
                                 </FormRow>
                             </Form>

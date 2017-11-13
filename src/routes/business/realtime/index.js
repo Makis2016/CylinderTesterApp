@@ -22,15 +22,17 @@ export default class Index extends Component {
             totalCount: 0,
             currentPage: 1,
             pageSize: 20,
-            areaData: {}
+            areaData: {},
+            alarmCount: 0
         };
 
         this._getAreas();
         this.mAreaId;
 
-        // this.mTimerList = setInterval(() => {
-        //     this._selectDeviceList();
-        // }, 1000);
+        this.mTimerList = setInterval(() => {
+            // this._selectDeviceList();
+            this._getWarningCount();
+        }, 1000);
     }
 
     componentWillUnmount() {
@@ -48,7 +50,7 @@ export default class Index extends Component {
         return (
             <div style={{ width: '100%', overflow: 'hidden' }}>
                 <TabHeader leftIcon={preBtn} />
-                <div className='flex flex-direction-column height-hundred-percent' style={{ marginTop: 10 }}>
+                <div className='flex flex-direction-column height-hundred-percent' style={{ marginTop: 15 }}>
                     <div className='flex flex-direction-column flex-justify-content-center'>
                         <Form ref="searchForm" >
                             <FormRow>
@@ -74,8 +76,10 @@ export default class Index extends Component {
                                 style={{ height: document.body.clientHeight }}
                             >
                             </CheckableListView>
+                            <div style={{ height: 70 }}></div>
                             <Footer
                                 index={1}
+                                alarmCount={this.state.alarmCount}
                             />
                         </div>
                     </div>
@@ -151,5 +155,21 @@ export default class Index extends Component {
                 }
             }
         });
+    }
+
+    _getWarningCount() {
+        requestAjax({
+            url: 'selectRealTimeWarning',
+            success: (result) => {
+                if (result.success) {
+                    let count = result.content.data.length;
+                    if (count > 0) {
+                        this.setState({
+                            alarmCount:count
+                        });
+                    }
+                }
+            }
+        }, false);
     }
 } 

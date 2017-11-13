@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { findDOMNode } from 'react-dom';
+
 import GridView from '../gridview';
 
 /**
@@ -12,6 +13,7 @@ export default class Footer extends Component {
         rawData: React.PropTypes.array, // 数据
         index: React.PropTypes.number,// 正在显示的页面序号
         params: React.PropTypes.object, // router的url参数
+        alarmCount:React.PropTypes.number
     };
 
     /**
@@ -53,6 +55,7 @@ export default class Footer extends Component {
                     rawData={this.props.rawData}
                     renderCell={(cellId, cellData) => this._renderCell(cellId, cellData)}
                     className='acticity-cell'
+                    alarmCount={this.props.alarmCount}
                 />
             </div>
         );

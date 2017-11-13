@@ -188,7 +188,7 @@ export function request(interfaceName, method, options, body) {
         credentials: 'include',
         method: method,
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         }
     };
 

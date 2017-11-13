@@ -24,12 +24,20 @@ export default class Index extends Component {
             value: '0',
             currentPage: 1,
             pageSize: 20,
-            areaData: {}
+            areaData: {},
+            alarmCount: 0
         };
 
         this._getAreas();
 
         this.mAreaId = null;
+        this.mTimerList = setInterval(() => {
+            this._getWarningCount();
+        }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.mTimerList);
     }
 
     render() {
@@ -37,7 +45,7 @@ export default class Index extends Component {
         let preBtn = null;
 
         return (
-            <div style={{ width: '100%',overflow:'hidden' }}>
+            <div style={{ width: '100%', overflow: 'hidden' }}>
                 <TabHeader leftIcon={preBtn} />
                 <div className='flex flex-direction-column height-hundred-percent' style={{ marginTop: 10 }}>
                     <div className='flex flex-direction-column flex-justify-content-center'>
@@ -55,12 +63,12 @@ export default class Index extends Component {
                         </Form>
                     </div>
                     <div className='flex flex-direction-row flex-justify-content-space-around flex-align-items-center' style={styles.title}>
-                        <div style={{width:'25%'}}>测试时间</div>
-                        <div style={{width:'25%'}}>气瓶编号</div>
-                        <div style={{width:'25%'}}>测试介质</div>
-                        <div style={{width:'25%'}}>测试方式</div>
+                        <div style={{ width: '25%' }}>测试时间</div>
+                        <div style={{ width: '25%' }}>气瓶编号</div>
+                        <div style={{ width: '25%' }}>测试介质</div>
+                        <div style={{ width: '25%' }}>测试方式</div>
                     </div>
-                    <div className='flex flex-direction-column' style={{ overflow: 'auto', width: '100%',height: document.body.clientHeight-49 }}>
+                    <div className='flex flex-direction-column' style={{ overflow: 'auto', width: '100%', height: document.body.clientHeight - 49 }}>
                         <div>
                             <CheckableListView
                                 ref='listview'
@@ -68,11 +76,12 @@ export default class Index extends Component {
                                 firstLoad='true'
                                 onFetch={(page, resolve, reject) => this._onFetch(page, resolve, reject)}
                                 renderCell={(cellId, cellData) => this._renderCell(cellId, cellData)}
-                                style={{ height: document.body.clientHeight}}
+                                style={{ height: document.body.clientHeight }}
                             >
                             </CheckableListView>
                             <Footer
                                 index={2}
+                                alarmCount={this.state.alarmCount}
                             />
                         </div>
                     </div>
@@ -102,11 +111,11 @@ export default class Index extends Component {
 
     _renderCell(cellId, cellData) {
         return (
-            <div className='flex flex-direction-row flex-justify-content-space-around flex-align-items-center' style={styles.cellData} onClick={()=>this._gtestEndInfo(cellData.id,cellData.deviceName,Formatter.date(new Date(cellData.lastSyncTime), 'YYYY-MM-DD HH:mm:ss'))}>
-                <div style={{width:'25%'}}>{Formatter.date(new Date(cellData.testingBeginTime), 'YYYY-MM-DD HH:mm')}</div>
-                <div style={{width:'25%'}}>{cellData.cylinderNumber}</div>
-                <div style={{width:'25%'}}>{media(cellData.testingMedia)}</div>
-                <div style={{width:'25%'}}>{testingType(cellData.testingType)}</div>
+            <div className='flex flex-direction-row flex-justify-content-space-around flex-align-items-center' style={styles.cellData} onClick={() => this._gtestEndInfo(cellData.id, cellData.deviceName, Formatter.date(new Date(cellData.lastSyncTime), 'YYYY-MM-DD HH:mm:ss'))}>
+                <div style={{ width: '25%' }}>{Formatter.date(new Date(cellData.testingBeginTime), 'YYYY-MM-DD HH:mm')}</div>
+                <div style={{ width: '25%' }}>{cellData.cylinderNumber}</div>
+                <div style={{ width: '25%' }}>{media(cellData.testingMedia)}</div>
+                <div style={{ width: '25%' }}>{testingType(cellData.testingType)}</div>
             </div>
         );
     }
@@ -173,17 +182,33 @@ export default class Index extends Component {
             }
         });
     }
+
+    _getWarningCount() {
+        requestAjax({
+            url: 'selectRealTimeWarning',
+            success: (result) => {
+                if (result.success) {
+                    let count = result.content.data.length;
+                    if (count > 0) {
+                        this.setState({
+                            alarmCount: count
+                        });
+                    }
+                }
+            }
+        }, false);
+    }
 }
 
 const styles = {
     title: {
         backgroundColor: '#BBBBBB',
-        height: 35, 
+        height: 35,
         color: '#FFFFFF',
         fontSize: 'medium'
     },
-    cellData:{
-        width:'100%',
-        height:45
+    cellData: {
+        width: '100%',
+        height: 45
     }
 };

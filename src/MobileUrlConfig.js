@@ -4,7 +4,8 @@
  */
 export const MobileUrlConfig = {
     // host: 'http://110.90.126.193:8090/cylinder/', // host
-    host: 'http://192.168.142.51:8080/', // host
+    // host: 'http://192.168.110.1:8080/', // host
+    host: 'http://192.168.3.121:8080/', // host    
     indexHtml: 'index.html',
     loginHtml: 'index.html#/login', // 登录页面
     login: 'login', // 登录
