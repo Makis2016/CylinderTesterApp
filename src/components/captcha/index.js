@@ -1,6 +1,6 @@
 import React from 'react';
 import { Host } from '../../host';
-
+import { requestAjax } from '../../utils/requestUtils';
 
 export default class Captcha extends React.Component {
     static propTypes = {
@@ -11,23 +11,36 @@ export default class Captcha extends React.Component {
         super(props);
 
         this.state = {
-            captchaUrl: Host.WEB + 'servlet/captchaCode' + '?t=' + Math.random()
+            captcha: ''
         };
+
+        this._clickCaptcha();
     }
 
 
     render() {
         return (
-            <img src={this.state.captchaUrl}
-                onClick={() => this._clickCaptcha()}
-                style={{ cursor: 'pointer', width: 100, height: 35 }}
-                alt='点击刷新'
-            />
+            <div style={{ cursor: 'pointer', width: 100, height: 35,lineHeight:'35px',fontSize:'xx-large',background: 'linear-gradient(to right, #DCDAB7,#A68E77,#D0D4B6,#716253)' }} onClick={() => this._clickCaptcha()}>
+                {this.state.captcha}
+            </div>
         );
     }
 
+
+
     _clickCaptcha() {
-        let captchaUrl = Host.WEB + 'servlet/captchaCode' + '?t=' + Math.random();
-        this.setState({ captchaUrl });
+        requestAjax({
+            url: 'captcha',
+            success: (result) => {
+                this.setState({
+                    captcha: result.content.data
+                });
+            },
+            fail: () => {
+                this.setState({
+                    captcha: '加载失败'
+                });
+            }
+        });
     }
 }

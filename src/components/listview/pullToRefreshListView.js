@@ -219,7 +219,7 @@ export default class PullToRefreshListView extends Component {
                     list.push(<div key={'footer'}>{this.props.renderFooter()}</div>);
 
                 return (
-                    <div style={{ position: 'relative' }}>
+                    <div style={{ position: 'relative'}}>
                         <Tloader
                             ref='listview'
                             initializing={this.state.initializing}

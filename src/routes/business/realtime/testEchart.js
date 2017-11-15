@@ -137,7 +137,7 @@ export default class TestEchart extends Component {
                         <span>累计流量：{this.state.testProcess.cumulativeFlowmeter}</span>
                     </div>
                 </div>
-                <div className='flex flex-direction-row flex-justify-content-space-around' style={{position:'fixed',bottom:0,width:'100%'}}>
+                <div className='flex flex-direction-row flex-justify-content-space-around' style={{width:'100%'}}>
                     <div className='flex flex-direction-column flex-align-items-center selected' ref='flow' style={{ marginTop: 20 }} onClick={() => this._changeEchart(1)} >
                         <Icon name="zhexiantu" />
                         <span style={{ whiteSpace: 'nowrap' }}>瞬时流量曲线</span>

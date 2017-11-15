@@ -4,8 +4,8 @@
  */
 export const MobileUrlConfig = {
     // host: 'http://110.90.126.193:8090/cylinder/', // host
-    // host: 'http://192.168.110.1:8080/', // host
-    host: 'http://192.168.3.121:8080/', // host    
+    // host: 'http://112.74.174.153/cylinder/', // host
+    host: 'http://192.168.31.78:8080/', // host    
     indexHtml: 'index.html',
     loginHtml: 'index.html#/login', // 登录页面
     login: 'login', // 登录
@@ -24,5 +24,6 @@ export const MobileUrlConfig = {
     echart:'realtime/echart', // 获取图表数据
     selectTestingProcessById:'realtime/selectTestingProcessById',
     selectHistory:'history/selectHistory',
-    selectRealTimeWarning:'realtime/selectRealTimeWarning'
+    selectRealTimeWarning:'realtime/selectRealTimeWarning',
+    captcha:'icloud/captcha'
 };

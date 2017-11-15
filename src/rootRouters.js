@@ -4,7 +4,6 @@ import Home from './home';
 import RealTime from './routes/business/realtime/';
 import TestInfo from './routes/business/realtime/deviceInfo';
 import TestEndInfo from './routes/business/realtime/testEndInfo';
-import DeviceManage from './routes/business/deviceManage';
 import History from './routes/business/history';
 import Alarm from './routes/business/alarm';
 import Login from './routes/business/login';
@@ -23,7 +22,6 @@ export default class RootRouters extends Component {
                 <Route name='home' path="/" component={Home} >
                     <Route path="/realTime" component={RealTime} />
                     <Route path="/deviceInfo" component={TestInfo} id={0}/>
-                    <Route path="/device" component={DeviceManage} />
                     <Route path="/report" component={History} />
                     <Route path="/alarm" component={Alarm} />                                                            
                     <Route path="/testEndInfo" component={TestEndInfo} />     

@@ -53,24 +53,18 @@ export default class TestEnd extends Component {
 
        
         return (
-            <div className='flex flex-direction-column fillParent'>
+            <div className='flex flex-direction-column '>
                 <div className='flex flex-direction-column' style={{ padding: 10 }}>
                     <div className='flex flex-direction-column fillParent' style={{ paddingTop: 10 }}>
                         <div style={{ fontSize: textFontSize }}>测试状态：{deviceStatus(this.props.deviceInfo.testingStatus)}</div>
                         <div style={{ fontSize: textFontSize }} onClick={() => this._showDialog('a0')}>测试蒸发率：{this.props.deviceInfo.a0+ '%/d'}</div>
                         <div style={{ fontSize: textFontSize }} onClick={() => this._showDialog('a20')}>静态蒸发率：{this.props.deviceInfo.a20 + '%/d'}</div>
-                    </div>
-                    <div className='flex flex-direction-column'>
                         <div style={{ fontSize: textFontSize }}>被检件内平均温度：{this.props.deviceInfo.t2 + 'K'}</div>
                         <div style={{ fontSize: textFontSize }}>日平均质量流量：{this.props.deviceInfo.qm + 'kg/d'}</div>
                         <div style={{ fontSize: textFontSize }}>日平均环境温度：{this.props.deviceInfo.t1 + 'K'}</div>
-                    </div>
-                    <div className='flex flex-direction-column'>
                         <div style={{ fontSize: textFontSize }}>测试介质：{media(this.props.deviceInfo.testingMedia)}</div>
                         <div style={{ fontSize: textFontSize }}>充满率：{this.props.deviceInfo.fillRate}</div>
                         <div style={{ fontSize: textFontSize }}>绝热性能测试结论：{this.props.deviceInfo.a20 > this.props.deviceInfo.ner ? '不符合' : '符合'}</div>
-                    </div>
-                    <div className='flex flex-direction-column'>
                         <div style={{ fontSize: textFontSize }}>测试方式：{testingTypeText}</div>
                     </div>
                 </div>

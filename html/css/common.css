@@ -803,3 +803,14 @@ a:hover
     width: 50px;
     text-align: center;
 }
+
+.kuma-select2-selection-selected-value{
+    position: absolute;
+    left: 10px;
+    top: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    padding-right:0px;
+}

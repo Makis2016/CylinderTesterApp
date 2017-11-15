@@ -6,6 +6,10 @@ import CheckableListView from '../../../components/listview/checkableListView';
 import Footer from '../../../components/footer/footer';
 import { requestAjax } from '../../../utils/requestUtils';
 
+/**
+ * 告警列表页面
+ * 
+ */
 export default class Index extends Component {
     static contextTypes = {
         router: React.PropTypes.object.isRequired
@@ -49,6 +53,10 @@ export default class Index extends Component {
         );
     }
 
+    /**
+     * 进入设备测试界面
+     * 
+     */
     _gdeviceInfo(id, name) {
         setConfig(id, name, null);
         this.context.router.push({
@@ -56,6 +64,10 @@ export default class Index extends Component {
         });
     }
 
+    /**
+     * 获取列表数据
+     * 
+     */
     _onFetch(page, resolve) {
         requestAjax({
             url: 'selectRealTimeWarning',
@@ -67,6 +79,10 @@ export default class Index extends Component {
         }, false);
     }
 
+    /**
+     * 渲染单个cell
+     * 
+     */
     _renderCell(cellId, cellData) {
         return (
             <div className='flex flex-direction-row flex-justify-content-space-around flex-align-items-center' style={styles.cellData} onClick={()=>this._gdeviceInfo(cellData.id,cellData.deviceName)}>

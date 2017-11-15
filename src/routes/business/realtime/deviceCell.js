@@ -28,7 +28,7 @@ export default class DeviceCell extends Component {
         return (
             <div className='flex' style={{flex:1}} >
                 {
-                    // device.online ?
+                    device.online ?
                     //<Link to='/deviceInfo' state={{ id: device.id, name: device.deviceName }}>
                     <div className='flex flex-direction-column flex-justify-content-center' style={styles.main} onClick={() => this._gdeviceInfo(device.id, device.deviceName)}>
                         <div className='warning' style={styles.icon}><img style={{ display: device.warningType == 'LEVEL4' ? 'inline' : 'none' }} src='./resources/images/warning1.png' /></div>
@@ -37,19 +37,23 @@ export default class DeviceCell extends Component {
                         <div className={device.online ? 'online' : ''} style={styles.icon}><img style={{ width: 20, height: 20 }} src={onlineImage} /></div>
                     </div>
                     //</Link>
-                    // :
-                    // <div className='flex flex-direction-column flex-justify-content-center' style={styles.main} onClick={() => this._showOnlineDialog()}>
-                    //     <div className='warning' style={styles.icon}><img style={{ display: device.warningType == 'LEVEL4' ? 'inline' : 'none' }} src='./resources/images/warning1.png' /></div>
-                    //     <div className='flex flex-justify-content-center'><img src='./resources/images/device.png' /></div>
-                    //     <div className='flex flex-justify-content-center' style={{ marginTop: 10 }}>{device.deviceName}</div>
-                    //     <div style={styles.icon}><img style={{ width: 20, height: 20 }} src={onlineImage} /></div>
-                    // </div>
+                    :
+                   <div className='flex flex-direction-column flex-justify-content-center' style={styles.main} onClick={() => this._showOnlineDialog()}>
+                        <div className='warning' style={styles.icon}><img style={{ display: device.warningType == 'LEVEL4' ? 'inline' : 'none' }} src='./resources/images/warning1.png' /></div>
+                        <div className='flex flex-justify-content-center'><img src='./resources/images/device.png' /></div>
+                        <div className='flex flex-justify-content-center' style={{ marginTop: 10 }}>{device.deviceName}</div>
+                        <div className={device.online ? 'online' : ''} style={styles.icon}><img style={{ width: 20, height: 20 }} src={onlineImage} /></div>
+                    </div>
                 }
 
             </div>
         );
     }
 
+    /**
+     *  跳转设备测试页面
+     * 
+     */
     _gdeviceInfo(id, name) {
         setConfig(id, name, null);
         this.context.router.push({
@@ -57,6 +61,10 @@ export default class DeviceCell extends Component {
         });
     }
 
+    /**
+     * 离线弹出框提示
+     * 
+     */
     _showOnlineDialog() {
         Dialog.info({
             title: '提示',

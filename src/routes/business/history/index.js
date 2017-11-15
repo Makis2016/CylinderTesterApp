@@ -11,7 +11,10 @@ import CheckableListView from '../../../components/listview/checkableListView';
 import Footer from '../../../components/footer/footer';
 import { requestAjax } from '../../../utils/requestUtils';
 
-
+/**
+ * 历史记录列表
+ * 
+ */
 export default class Index extends Component {
     static contextTypes = {
         router: React.PropTypes.object.isRequired
@@ -20,20 +23,22 @@ export default class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fetchParams: {},
             value: '0',
             currentPage: 1,
-            pageSize: 20,
+            pageSize: 10,
             areaData: {},
-            alarmCount: 0
+            alarmCount: 0,
+            clientwidth:document.body.clientWidth
         };
 
         this._getAreas();
 
-        this.mAreaId = null;
-        this.mTimerList = setInterval(() => {
-            this._getWarningCount();
-        }, 1000);
+        this.mAreaId =0;
+        this.deviceCode;
+        this.params={areaId:null,deviceCode:null};
+        // this.mTimerList = setInterval(() => {
+        //     this._getWarningCount();
+        // }, 1000);
     }
 
     componentWillUnmount() {
@@ -43,18 +48,19 @@ export default class Index extends Component {
     render() {
 
         let preBtn = null;
-
+        let cWidth = (this.state.clientwidth-150)/3;
         return (
             <div style={{ width: '100%', overflow: 'hidden' }}>
                 <TabHeader leftIcon={preBtn} />
+                <style>{'.searchRow{margin-left:40px}'}</style>
                 <div className='flex flex-direction-column height-hundred-percent' style={{ marginTop: 10 }}>
                     <div className='flex flex-direction-column flex-justify-content-center'>
                         <Form ref="searchForm" >
                             <FormRow>
-                                <CascadeSelectFormField jsxstyle={{ width: 80 }} jsxlabel="区域" jsxname="city" jsxdata={this.state.areaData} jsxplaceholder={['省', '市', '区']} />
+                                <CascadeSelectFormField jsxstyle={{ width: cWidth }} jsxlabel="区域" jsxname="city" jsxdata={this.state.areaData} jsxplaceholder={['省', '市', '区']} />
                             </FormRow>
-                            <FormRow >
-                                <InputFormField jsxname="deviceName" jsxlabel="区域" jsxshowLabel={false} jsxplaceholder="输入设备名称进行查询" />
+                            <FormRow className='searchRow'>
+                                <InputFormField jsxname="deviceCode" jsxshowLabel={false} jsxplaceholder="输入设备唯一码进行查询" />
                                 <OtherFormField className="searchButton">
                                     <Button onClick={() => this._handleSearch()}>查询</Button>
                                     <Button onClick={() => this._refresh()}>清空</Button>
@@ -90,10 +96,14 @@ export default class Index extends Component {
         );
     }
 
+    /**
+     * 获取数据列表
+     * 
+     */
     _onFetch(page, resolve) {
         requestAjax({
             url: 'selectHistory',
-            params: { currentPage: page, pageSize: this.state.pageSize },
+            params: { currentPage: page, pageSize: this.state.pageSize,areaId:this.mAreaId,deviceCode:this.deviceCode},
             success: (result) => {
                 if (result.success) {
                     resolve(result.content.data);
@@ -109,6 +119,10 @@ export default class Index extends Component {
         }, false);
     }
 
+    /**
+     * 渲染单个Cell
+     * 
+     */
     _renderCell(cellId, cellData) {
         return (
             <div className='flex flex-direction-row flex-justify-content-space-around flex-align-items-center' style={styles.cellData} onClick={() => this._gtestEndInfo(cellData.id, cellData.deviceName, Formatter.date(new Date(cellData.lastSyncTime), 'YYYY-MM-DD HH:mm:ss'))}>
@@ -120,6 +134,10 @@ export default class Index extends Component {
         );
     }
 
+    /**
+     * 进入测试结束界面
+     * 
+     */
     _gtestEndInfo(id, name, time) {
         setConfig(id, name, time);
         this.context.router.push({
@@ -127,48 +145,44 @@ export default class Index extends Component {
         });
     }
 
-    _transferPane(value) {
-        this.mAreaId = value;
-    }
-
+    /**
+     *  搜索事件
+     * 
+     */
     _handleSearch() {
-        let formParams = this.refs.searchForm.getValues().values;
-        if (formParams.startTime != '' && formParams.endTime != '') {
-            if (formParams.startTime > formParams.endTime) {
-                Message['info']('开始时间大于结束时间！');
-                return;
-            }
+        let data = this.refs.searchForm.getValues().values;
+        let citys = [];
+        let area = 0;
+        if(data.city != undefined){
+            citys = data.city;
+        }                
+        if(citys.length > 0){
+            area = parseInt(citys[citys.length - 1]);
         }
-
-        if (formParams.startTime == null) {
-            formParams.startTime = '';
-        }
-
-        if (formParams.endTime == null) {
-            formParams.endTime = '';
-        }
-
-        let areaId = this.mAreaId || '0';
-        let params = assign({ areaId: areaId }, formParams);
-        this.setState({
-            fetchParams: params,
-            value: areaId
-        });
+        this.mAreaId = area;
+        this.deviceCode = data.deviceCode;
+        this.refs.listview.reload();
     }
 
+    /**
+     *  清空搜索条件
+     * 
+     */
     _refresh() {
-        this.mAreaId = '0';
-        this.refs.searchForm.setValues({
-            deviceCode: '',
-            startTime: '',
-            endTime: ''
+        let form = this.refs.searchForm;
+        form.setValues({
+            deviceName: '',
+            city: []
         });
-
-        this.setState({
-            fetchParams: {},
-            value: '0'
-        });
+        this.mAreaId = 0;
+        this.deviceName = '';
+        this.refs.listview.reload();
     }
+
+    /**
+     * 获取区域下拉框数据
+     * 
+     */
     _getAreas() {
         requestAjax({
             url: 'getAreaData',
@@ -183,6 +197,10 @@ export default class Index extends Component {
         });
     }
 
+    /**
+     * 获取告警条数
+     * 
+     */
     _getWarningCount() {
         requestAjax({
             url: 'selectRealTimeWarning',
@@ -198,6 +216,7 @@ export default class Index extends Component {
             }
         }, false);
     }
+
 }
 
 const styles = {
