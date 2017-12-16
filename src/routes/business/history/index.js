@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import Form, { FormRow, InputFormField, OtherFormField, CascadeSelectFormField } from 'uxcore-form';
-import Button from 'uxcore-button';
+import ReactDOM from 'react-dom';
 import Formatter from 'uxcore-formatter';
-import assign from 'object-assign';
-import Message from 'uxcore-message';
+import { Flex, NavBar, ListView, PullToRefresh, DatePicker, List, InputItem, Button, Picker, WhiteSpace } from 'antd-mobile';
 import { testingType, media } from '../../../utils/commonUtil';
 import { setConfig } from '../../../common/UserStore';
-import TabHeader from '../../../components/tabHeader/tabHeader';
-import CheckableListView from '../../../components/listview/checkableListView';
-import Footer from '../../../components/footer/footer';
 import { requestAjax } from '../../../utils/requestUtils';
+
+const NUM_ROWS = 20;
+let pageIndex = 1;
 
 /**
  * 历史记录列表
@@ -22,51 +20,193 @@ export default class Index extends Component {
 
     constructor(props) {
         super(props);
+
+        const dataSource = new ListView.DataSource({
+            rowHasChanged: (row1, row2) => row1 !== row2,
+        });
+
         this.state = {
-            value: '0',
-            currentPage: 1,
-            pageSize: 10,
+            dataSource,
+            refreshing: true,
+            isLoading: true,
+            height: document.documentElement.clientHeight,
+            useBodyScroll: false,
+            hasMore: true,
+            date: new Date(),
             areaData: {},
-            alarmCount: 0,
-            clientwidth:document.body.clientWidth
+            pickerValue: '',
+            bottomHeight: 40
         };
 
         this._getAreas();
 
-        this.mAreaId =0;
+        this.mAreaId = 0;
         this.deviceCode;
-        this.params={areaId:null,deviceCode:null};
-        // this.mTimerList = setInterval(() => {
-        //     this._getWarningCount();
-        // }, 1000);
+        this.createTime;
+        this.arr = [];
     }
 
-    componentWillUnmount() {
-        clearInterval(this.mTimerList);
+    componentDidUpdate() {
+        document.body.style.overflow = 'hidden';
+    }
+
+    componentDidMount() {
+        const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop;
+        this._fetchData();
+        this.setState({
+            height: hei,
+        });
+    }
+
+    onRefresh = () => {
+        this.setState({ refreshing: true, isLoading: true });
+        // simulate initial Ajax
+        pageIndex = 1;
+        this._fetchData();
+    };
+
+    onEndReached = (event) => {
+        if (this.state.isLoading || !this.state.hasMore) {
+            return;
+        }
+        this.setState({ isLoading: true });
+        this._fetchData(++pageIndex);
+    };
+
+    _fetchData(page = 1) {
+        if (page != 1) {
+            requestAjax({
+                url: 'selectHistory',
+                params: { currentPage: page, pageSize: NUM_ROWS, areaId: this.mAreaId, deviceCode: this.deviceCode, createTime: Formatter.date(this.state.date, 'YYYY-MM-DD') },
+                success: (result) => {
+                    if (result.success) {
+                        this.arr = result.content.data;
+                        this.rData = [...this.rData, ...this.arr];
+                        if ((page * NUM_ROWS) >= result.content.totalCount) {
+                            this.setState({
+                                hasMore: false,
+                                dataSource: this.state.dataSource.cloneWithRows(this.rData),
+                                isLoading: false,
+                                refreshing: false,
+                                bottomHeight: result.content.totalCount * 55 > this.state.height ? 40 : this.state.height - result.content.totalCount * 55 - 80
+                            });
+                        } else {
+                            this.setState({
+                                hasMore: true,
+                                dataSource: this.state.dataSource.cloneWithRows(this.rData),
+                                isLoading: false,
+                                refreshing: false,
+                                bottomHeight: result.content.totalCount * 55 > this.state.height ? 40 : this.state.height - result.content.totalCount * 55 - 80
+                            });
+                        }
+                    }
+                },
+                fail: (result) => {
+                }
+            }, false);
+        } else {
+            requestAjax({
+                url: 'selectHistory',
+                params: { currentPage: page, pageSize: 20, areaId: this.mAreaId, deviceCode: this.deviceCode, createTime: Formatter.date(this.state.date, 'YYYY-MM-DD') },
+                success: (result) => {
+                    if (result.success) {
+                        this.arr = result.content.data;
+                        this.rData = result.content.data;
+                        if ((page * NUM_ROWS) >= result.content.totalCount) {
+                            this.setState({
+                                hasMore: false,
+                                dataSource: this.state.dataSource.cloneWithRows(this.arr),
+                                isLoading: false,
+                                refreshing: false,
+                                bottomHeight: result.content.totalCount * 55 > this.state.height ? 40 : this.state.height - result.content.totalCount * 55 - 80
+                            });
+                        } else {
+                            this.setState({
+                                hasMore: true,
+                                dataSource: this.state.dataSource.cloneWithRows(this.arr),
+                                isLoading: false,
+                                refreshing: false,
+                                bottomHeight: result.content.totalCount * 55 > this.state.height ? 40 : this.state.height - result.content.totalCount * 55 - 80
+                            });
+                        }
+                    }
+                },
+                fail: (result) => {
+                }
+            }, false);
+        }
     }
 
     render() {
 
-        let preBtn = null;
-        let cWidth = (this.state.clientwidth-150)/3;
+        const separator = (sectionID, rowID) => (
+            <div
+                key={`${sectionID}-${rowID}`}
+                style={{
+                    backgroundColor: '#F5F5F9',
+                    height: 8,
+                    borderTop: '1px solid #ECECED',
+                    borderBottom: '1px solid #ECECED',
+                }}
+            />
+        );
+        const row = (rowData) => {
+            return (
+                <div className='flex flex-direction-row flex-justify-content-space-around flex-align-items-center' style={styles.cellData} onClick={() => this._gtestEndInfo(rowData.id, rowData.deviceName, Formatter.date(new Date(rowData.lastSyncTime), 'YYYY-MM-DD HH:mm:ss'))}>
+                    <div style={{ width: '25%' }}>{Formatter.date(new Date(rowData.testingBeginTime), 'YYYY-MM-DD HH:mm')}</div>
+                    <div style={{ width: '25%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rowData.cylinderNumber}</div>
+                    <div style={{ width: '25%' }}>{media(rowData.testingMedia)}</div>
+                    <div style={{ width: '25%' }}>{testingType(rowData.testingType)}</div>
+                </div>
+            );
+        };
+
+        let district = this.state.areaData.children;
         return (
             <div style={{ width: '100%', overflow: 'hidden' }}>
-                <TabHeader leftIcon={preBtn} />
-                <style>{'.searchRow{margin-left:40px}'}</style>
-                <div className='flex flex-direction-column height-hundred-percent' style={{ marginTop: 10 }}>
-                    <div className='flex flex-direction-column flex-justify-content-center'>
-                        <Form ref="searchForm" >
-                            <FormRow>
-                                <CascadeSelectFormField jsxstyle={{ width: cWidth }} jsxlabel="区域" jsxname="city" jsxdata={this.state.areaData} jsxplaceholder={['省', '市', '区']} />
-                            </FormRow>
-                            <FormRow className='searchRow'>
-                                <InputFormField jsxname="deviceCode" jsxshowLabel={false} jsxplaceholder="输入设备唯一码进行查询" />
-                                <OtherFormField className="searchButton">
-                                    <Button onClick={() => this._handleSearch()}>查询</Button>
-                                    <Button onClick={() => this._refresh()}>清空</Button>
-                                </OtherFormField>
-                            </FormRow>
-                        </Form>
+                <NavBar
+                    mode="dark"
+                >焊接绝热气瓶静态蒸发率测试系统</NavBar>
+                <div className='flex flex-direction-column height-hundred-percent' style={{}}>
+                    <div className='flex flex-direction-column' style={{ height: 170, padding: 10 }}>
+                        <Flex>
+                            <Flex.Item>
+                                <DatePicker
+                                    mode="date"
+                                    title="请选择日期"
+                                    value={this.state.date}
+                                    onChange={date => this.setState({ date })}
+                                >
+                                    <List.Item  >开始测试时间</List.Item>
+                                </DatePicker>
+                            </Flex.Item>
+                        </Flex>
+                        <WhiteSpace size="lg" />
+                        <Flex>
+                            <Flex.Item>
+                                <Picker
+                                    visible={this.state.visible}
+                                    data={district}
+                                    value={this.state.pickerValue}
+                                    onChange={(v) => { this._pickerChange(v); }}
+                                    onOk={() => this.setState({ visible: false })}
+                                    onDismiss={() => this.setState({ visible: false })}
+                                >
+                                    <List.Item className='area' onClick={() => this.setState({ visible: true })}>
+                                        地区
+                                    </List.Item>
+                                </Picker>
+                            </Flex.Item>
+                        </Flex>
+                        <WhiteSpace size="lg" />
+                        <Flex justify={'center'} alignContent={'between'}>
+                            <div style={{ width: '75%' }}>
+                                <InputItem ref='deviceCode' placeholder="输入设备唯一码" />
+                            </div>
+                            <Flex.Item>
+                                <Button type="primary" size="large" inline={true} style={{ height: 44, lineHeight: '44px', color: '#ffffff' }} onClick={() => this._handleSearch()}>搜索</Button>
+                            </Flex.Item>
+                        </Flex>
                     </div>
                     <div className='flex flex-direction-row flex-justify-content-space-around flex-align-items-center' style={styles.title}>
                         <div style={{ width: '25%' }}>测试时间</div>
@@ -76,18 +216,28 @@ export default class Index extends Component {
                     </div>
                     <div className='flex flex-direction-column' style={{ overflow: 'auto', width: '100%', height: document.body.clientHeight - 49 }}>
                         <div>
-                            <CheckableListView
-                                ref='listview'
-                                columns={1}
-                                firstLoad='true'
-                                onFetch={(page, resolve, reject) => this._onFetch(page, resolve, reject)}
-                                renderCell={(cellId, cellData) => this._renderCell(cellId, cellData)}
-                                style={{ height: document.body.clientHeight }}
-                            >
-                            </CheckableListView>
-                            <Footer
-                                index={2}
-                                alarmCount={this.state.alarmCount}
+                            <ListView
+                                key={this.state.useBodyScroll ? '0' : '1'}
+                                ref={el => this.lv = el}
+                                dataSource={this.state.dataSource}
+                                renderFooter={() => (<div style={{ marginBottom: 40, textAlign: 'center', height: this.state.bottomHeight }}>
+                                    {this.state.isLoading ? '正在加载...' : this.state.hasMore ? '上拉加载数据' : '没有更多数据'}
+                                </div>)}
+                                renderRow={row}
+                                renderSeparator={separator}
+                                useBodyScroll={this.state.useBodyScroll}
+                                style={this.state.useBodyScroll ? {} : {
+                                    height: this.state.height,
+                                    border: '1px solid #ddd',
+                                }}
+                                pullToRefresh={<PullToRefresh
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.onRefresh}
+                                    distanceToRefresh={50}
+                                />}
+                                onEndReached={this.onEndReached}
+                                onEndReachedThreshold={0}
+                                pageSize={20}
                             />
                         </div>
                     </div>
@@ -96,42 +246,16 @@ export default class Index extends Component {
         );
     }
 
-    /**
-     * 获取数据列表
-     * 
-     */
-    _onFetch(page, resolve) {
-        requestAjax({
-            url: 'selectHistory',
-            params: { currentPage: page, pageSize: this.state.pageSize,areaId:this.mAreaId,deviceCode:this.deviceCode},
-            success: (result) => {
-                if (result.success) {
-                    resolve(result.content.data);
-                    this.setState({
-                        Date: new Date(),
-                        totalCount: result.content.totalCount
-                    });
-                }
-            },
-            fail: (result) => {
-                Message['info'](result.errorMsg);
+    _pickerChange(v) {
+        let value = v;
+        if (v.length > 1) {
+            if (v[v.length - 1] == 0) {
+                v.pop();
             }
-        }, false);
-    }
-
-    /**
-     * 渲染单个Cell
-     * 
-     */
-    _renderCell(cellId, cellData) {
-        return (
-            <div className='flex flex-direction-row flex-justify-content-space-around flex-align-items-center' style={styles.cellData} onClick={() => this._gtestEndInfo(cellData.id, cellData.deviceName, Formatter.date(new Date(cellData.lastSyncTime), 'YYYY-MM-DD HH:mm:ss'))}>
-                <div style={{ width: '25%' }}>{Formatter.date(new Date(cellData.testingBeginTime), 'YYYY-MM-DD HH:mm')}</div>
-                <div style={{ width: '25%' }}>{cellData.cylinderNumber}</div>
-                <div style={{ width: '25%' }}>{media(cellData.testingMedia)}</div>
-                <div style={{ width: '25%' }}>{testingType(cellData.testingType)}</div>
-            </div>
-        );
+        }
+        this.setState({
+            pickerValue: value
+        });
     }
 
     /**
@@ -150,18 +274,12 @@ export default class Index extends Component {
      * 
      */
     _handleSearch() {
-        let data = this.refs.searchForm.getValues().values;
-        let citys = [];
-        let area = 0;
-        if(data.city != undefined){
-            citys = data.city;
-        }                
-        if(citys.length > 0){
-            area = parseInt(citys[citys.length - 1]);
+        let citys = this.state.pickerValue;
+        if (citys.length > 0) {
+            this.mAreaId = citys[citys.length - 1];
         }
-        this.mAreaId = area;
-        this.deviceCode = data.deviceCode;
-        this.refs.listview.reload();
+        this.deviceCode = this.refs.deviceCode.state.value;
+        this.onRefresh();
     }
 
     /**
@@ -189,34 +307,21 @@ export default class Index extends Component {
             method: 'post',
             success: (resp) => {
                 if (resp.success) {
+                    // TODO
+                    let str = JSON.stringify(resp.content.data).replace(/contents/g, 'children').replace(/text/g, 'label');
                     this.setState({
-                        areaData: resp.content.data
+                        areaData: JSON.parse(str)
                     });
                 }
             }
         });
     }
 
-    /**
-     * 获取告警条数
-     * 
-     */
-    _getWarningCount() {
-        requestAjax({
-            url: 'selectRealTimeWarning',
-            success: (result) => {
-                if (result.success) {
-                    let count = result.content.data.length;
-                    if (count > 0) {
-                        this.setState({
-                            alarmCount: count
-                        });
-                    }
-                }
-            }
-        }, false);
+    _pre() {
+        this.context.router.push({
+            pathname: '/realTime'
+        });
     }
-
 }
 
 const styles = {

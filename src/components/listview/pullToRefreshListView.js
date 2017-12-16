@@ -87,7 +87,7 @@ export default class PullToRefreshListView extends Component {
     componentDidMount() {
         if (this.props.firstLoad) {
             this.refs['listview'].loadMore();
-            this.refs['loading'].open();
+            // this.refs['loading'].open();
         }
 
         let node = findDOMNode(this.refs['listview']);
@@ -131,7 +131,7 @@ export default class PullToRefreshListView extends Component {
     reload() {
         this.firstLoad = true;
         this._onRefresh();
-        this.refs['loading'].open();
+        // this.refs['loading'].open();
     }
 
     /**

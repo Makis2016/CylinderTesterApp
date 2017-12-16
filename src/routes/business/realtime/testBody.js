@@ -41,7 +41,7 @@ export default class TestBody extends Component {
                 <div className='flex flex-direction-column'>
                     <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
                         <div style={{ fontSize: textFontSize }}>测试介质：</div>
-                        <div style={{ fontSize: textFontSize }}>{media(this.props.deviceInfo.testingMedia)}</div>
+                        <div style={{ fontSize: textFontSize,width:200 }}>{media(this.props.deviceInfo.testingMedia)}</div>
                     </div>
                 </div>
                 <div className='flex flex-direction-column'>
@@ -49,23 +49,23 @@ export default class TestBody extends Component {
                         <div style={{ fontSize: textFontSize }}>静置开始时间：</div>
                         {
                             (this.props.deviceInfo.staticBeginTime == null)?
-                            <div style={{ fontSize: textFontSize }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                            <div style={{ fontSize: textFontSize,width:200 }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                             :
-                            <div style={{ fontSize: textFontSize }}>{Formatter.date(new Date(this.props.deviceInfo.staticBeginTime), 'YYYY-MM-DD HH:mm')}</div>
+                            <div style={{ fontSize: textFontSize,width:200 }}>{Formatter.date(new Date(this.props.deviceInfo.staticBeginTime), 'YYYY-MM-DD HH:mm')}</div>
                         }
                     </div>
                     <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
                         <div style={{ fontSize: textFontSize }}>结束时间：</div>
                         {
                             (this.props.deviceInfo.staticEndTime == null) ?
-                                <div style={{ fontSize: textFontSize }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                <div style={{ fontSize: textFontSize,width:200 }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                 :
-                                <div style={{ fontSize: textFontSize }}>{Formatter.date(new Date(this.props.deviceInfo.staticEndTime), 'YYYY-MM-DD HH:mm')}</div>
+                                <div style={{ fontSize: textFontSize,width:200 }}>{Formatter.date(new Date(this.props.deviceInfo.staticEndTime), 'YYYY-MM-DD HH:mm')}</div>
                         }
                     </div>
-                    <div className='flex flex-direction-row' style={{ marginRight: 20 }}>
-                        <div style={{ fontSize: textFontSize, marginLeft: 20 }}>累计时长(时:分)：</div>
-                        <div style={{ fontSize: textFontSize }}>{formatDuring(this.props.deviceInfo.staticRunTime)}</div>
+                    <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
+                        <div style={{ fontSize: textFontSize }}>累计时长(时:分)：</div>
+                        <div style={{ fontSize: textFontSize,width:150 }}>{formatDuring(this.props.deviceInfo.staticRunTime)}</div>
                     </div>
                 </div>
                 <div className='flex flex-direction-column fillParent flex-justify-content-space-between'>
@@ -73,24 +73,24 @@ export default class TestBody extends Component {
                         <div style={{ fontSize: textFontSize }}>测试开始时间：</div>
                         {
                             (this.props.deviceInfo.testingBeginTime == null) ?
-                                <div style={{ fontSize: textFontSize }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                <div style={{ fontSize: textFontSize,width:200 }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                 :
-                                <div style={{ fontSize: textFontSize }}>{Formatter.date(new Date(this.props.deviceInfo.testingBeginTime), 'YYYY-MM-DD HH:mm')}</div>
+                                <div style={{ fontSize: textFontSize,width:200 }}>{Formatter.date(new Date(this.props.deviceInfo.testingBeginTime), 'YYYY-MM-DD HH:mm')}</div>
                         }
 
                     </div>
-                    <div className='flex flex-direction-row' style={{ marginRight: 20 }}>
-                        <div style={{ fontSize: textFontSize, marginLeft: 20 }}>结束时间：</div>
+                    <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
+                        <div style={{ fontSize: textFontSize }}>结束时间：</div>
                         {
                             (this.props.deviceInfo.testingEndTime == null) ?
-                                <div style={{ fontSize: textFontSize }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                <div style={{ fontSize: textFontSize,width:200 }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                 :
-                                <div style={{ fontSize: textFontSize }}>{Formatter.date(new Date(this.props.deviceInfo.testingEndTime), 'YYYY-MM-DD HH:mm')}</div>
+                                <div style={{ fontSize: textFontSize,width:200 }}>{Formatter.date(new Date(this.props.deviceInfo.testingEndTime), 'YYYY-MM-DD HH:mm')}</div>
                         }
                     </div>
-                    <div className='flex flex-direction-row' style={{ marginRight: 20 }}>
-                        <div style={{ fontSize: textFontSize, marginLeft: 20 }}>累计时长(时:分)：</div>
-                        <div style={{ fontSize: textFontSize }}>{formatDuring(this.props.deviceInfo.testingRunTime)}</div>
+                    <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
+                        <div style={{ fontSize: textFontSize }}>累计时长(时:分)：</div>
+                        <div style={{ fontSize: textFontSize,width:150 }}>{formatDuring(this.props.deviceInfo.testingRunTime)}</div>
                     </div>
                 </div>
             </div>

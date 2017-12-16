@@ -30,7 +30,7 @@ export default class TestEnd extends Component {
         let textFontSize = 16;
 
         let testingTypeText = '标准测试';
-
+        let visibilityFlag = (this.props.deviceInfo.testingRunTime != undefined) ? (((this.props.deviceInfo.testingRunTime) / 60 >= 8) ? false : true) : false;
         if (this.props.deviceInfo.testingMode == 'CONSTANTPRESSURE' && this.props.deviceInfo.testingType == 'AUTO') {
             testingTypeText = '自动测试（常压模式）';
         } else if (this.props.deviceInfo.testingMode == 'PRESSUREBEARING' && this.props.deviceInfo.testingType == 'AUTO') {
@@ -51,28 +51,41 @@ export default class TestEnd extends Component {
             staticImg = 'data:image/png;base64,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';
         }
 
-       
+
         return (
-            <div className='flex flex-direction-column '>
+            <div className='flex flex-direction-column ' style={{overflow:'auto',height:document.body.clientHeight - 90}}>
                 <div className='flex flex-direction-column' style={{ padding: 10 }}>
-                    <div className='flex flex-direction-column fillParent' style={{ paddingTop: 10 }}>
+                    <div className='flex flex-direction-column fillParent'>
                         <div style={{ fontSize: textFontSize }}>测试状态：{deviceStatus(this.props.deviceInfo.testingStatus)}</div>
-                        <div style={{ fontSize: textFontSize }} onClick={() => this._showDialog('a0')}>测试蒸发率：{this.props.deviceInfo.a0+ '%/d'}</div>
-                        <div style={{ fontSize: textFontSize }} onClick={() => this._showDialog('a20')}>静态蒸发率：{this.props.deviceInfo.a20 + '%/d'}</div>
-                        <div style={{ fontSize: textFontSize }}>被检件内平均温度：{this.props.deviceInfo.t2 + 'K'}</div>
-                        <div style={{ fontSize: textFontSize }}>日平均质量流量：{this.props.deviceInfo.qm + 'kg/d'}</div>
-                        <div style={{ fontSize: textFontSize }}>日平均环境温度：{this.props.deviceInfo.t1 + 'K'}</div>
+                        <div style={{ fontSize: textFontSize }} onClick={() => this._showDialog('a0')}>测试蒸发率：{this.props.deviceInfo.a0.toFixed(2) + '%/d'}</div>
+                        <div style={{ fontSize: textFontSize }} onClick={() => this._showDialog('a20')}>静态蒸发率：{this.props.deviceInfo.a20.toFixed(2) + '%/d'}</div>
+                        <div style={{ fontSize: textFontSize }}>被检件内平均温度：{this.props.deviceInfo.t2.toFixed(2) + 'K'}</div>
+                        <div style={{ fontSize: textFontSize }}>日平均质量流量：{this.props.deviceInfo.qm.toFixed(2) + 'kg/d'}</div>
+                        <div style={{ fontSize: textFontSize }}>日平均环境温度：{this.props.deviceInfo.t1.toFixed(2) + 'K'}</div>
                         <div style={{ fontSize: textFontSize }}>测试介质：{media(this.props.deviceInfo.testingMedia)}</div>
                         <div style={{ fontSize: textFontSize }}>充满率：{this.props.deviceInfo.fillRate}</div>
                         <div style={{ fontSize: textFontSize }}>绝热性能测试结论：{this.props.deviceInfo.a20 > this.props.deviceInfo.ner ? '不符合' : '符合'}</div>
                         <div style={{ fontSize: textFontSize }}>测试方式：{testingTypeText}</div>
+
+                      
+                        {
+                            (this.props.deviceInfo.warningType == 'LEVEL5') ?
+                                <div style={{ fontSize: textFontSize, color: 'red' }}>
+                                    被检件内压力异常结束
+                                    </div>
+                                :
+                                <div style={{ fontSize: textFontSize, visibility: visibilityFlag ? '' : 'hidden', color: 'red' }}>
+                                    测试时间：{(this.props.deviceInfo.testingRunTime) / 60 >= 8 ? '' : '测试时间不足8小时'}
+                                </div>
+                        }
                     </div>
                 </div>
-                <TestEchart testMedia={this.props.deviceInfo.testingMedia} cylinderId={this.props.deviceInfo.id} testStatus={this.props.deviceInfo.testingStatus} mResult={true} testingMode={this.props.deviceInfo.testingMode}/>
+                <TestEchart testMedia={this.props.deviceInfo.testingMedia} cylinderId={this.props.deviceInfo.id} testStatus={this.props.deviceInfo.testingStatus} mResult={true} testingMode={this.props.deviceInfo.testingMode} />
                 <Dialog
                     title={'测试蒸发率算法'}
                     visible={this.state.testDialogShow}
                     footer={[]}
+                    width={document.body.clientWidth - 10}
                     onCancel={() => {
                         this.setState({
                             testDialogShow: false
@@ -94,6 +107,7 @@ export default class TestEnd extends Component {
                     title={'静态蒸发率算法'}
                     visible={this.state.staticDialogShow}
                     footer={[]}
+                    width={document.body.clientWidth - 10}
                     onCancel={() => {
                         this.setState({
                             staticDialogShow: false
@@ -101,7 +115,7 @@ export default class TestEnd extends Component {
                     }}
                 >
                     <div className='flex flex-direction-column' style={{ fontSize: 15 }}>
-                        <div><img src={staticImg} /></div>
+                        <div><img width={document.body.clientWidth - 50} src={staticImg} /></div>
                         <div>
                             <div>a<sub>20</sub>------静态蒸发率，单位为百分比每天(%/d)</div>
                             <div>a<sub>0</sub>------测试蒸发率，单位为百分比每天(%/d) 值为:<span style={{ color: 'red' }}>{this.props.deviceInfo.a0}</span></div>
@@ -128,5 +142,5 @@ export default class TestEnd extends Component {
             });
         }
     }
-  
+
 }

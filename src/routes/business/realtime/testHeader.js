@@ -28,7 +28,7 @@ export default class TestHeader extends Component {
             showWarningImg: this.props.deviceInfo.warningType == 'LEVEL4' ? 'visible' : 'hidden',
         };
         this.mId = this.props.deviceInfo.id;
-        
+
         this._getDisRate();
 
         // 告警图片闪烁
@@ -49,7 +49,7 @@ export default class TestHeader extends Component {
         clearInterval(this.mImgTimer);
     }
 
-    componentWillReceiveProps(newprops){
+    componentWillReceiveProps(newprops) {
         this.mId = newprops.deviceInfo.id;
         this._getDisRate();
     }
@@ -59,7 +59,7 @@ export default class TestHeader extends Component {
         let warning = '请检查测试系统管路是否泄漏或调压阀设置是否正常';
         let testingTypeText = '';
 
-         // 常压
+        // 常压
         if (this.props.deviceInfo.testingMode == 'CONSTANTPRESSURE') {
             warning = '请检查测试系统及管路是否泄漏';
         } else if (this.props.deviceInfo.testingMode == 'PRESSUREBEARING') {
@@ -80,28 +80,6 @@ export default class TestHeader extends Component {
         return (
             <div className='flex flex-direction-column'>
                 <div className='flex flex-direction-column fillParent flex-justify-content-space-between '>
-                    <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
-                        <div style={{ fontSize: textFontSize }}>测试阶段：</div>
-                        <div style={{ color: '#259b24', fontSize: textFontSize }}>{deviceStatus(this.props.deviceInfo.testingStatus)}</div>
-                    </div>
-                    {
-                       this.props.deviceInfo.warningType != 'LEVEL4' ?
-                            <div>
-                            </div>
-                            :
-                            <div className='flex flex-direction-row flex-justify-content-center flex-align-items-center' style={{ marginRight: 20 }}>
-                                <div style={{ fontSize: textFontSize, marginLeft: 15 }}>告警信息：</div>
-                                <div style={{ color: '#259b24', fontSize: textFontSize }}>{warning}</div>
-                                <img src={require('./warning.png')} height={textFontSize} width={textFontSize} style={{ visibility: this.state.showWarningImg }} />
-                            </div>
-                    }
-
-                </div>
-                <div className='flex flex-direction-column fillParent flex-justify-content-space-between'>
-                    <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
-                        <div style={{ fontSize: textFontSize }}>预估值：</div>
-                        <div style={{ fontSize: textFontSize }}>{this.state.disRate + '%/d'}</div>
-                    </div>
                     {
                         this.props.deviceInfo.testingType != 'STANDARD' ?
                             <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
@@ -111,10 +89,30 @@ export default class TestHeader extends Component {
                             :
                             <div></div>
                     }
-
-                    <div className='flex flex-direction-row' style={{ marginRight: 20 }}>
-                        <div style={{ fontSize: textFontSize, marginLeft: 20 }}>合格值：</div>
+                    <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
+                        <div style={{ fontSize: textFontSize }}>测试阶段：</div>
+                        <div style={{ color: '#259b24', fontSize: textFontSize}}>{deviceStatus(this.props.deviceInfo.testingStatus)}</div>
+                        <div></div>
+                    </div>
+                    {
+                        this.props.deviceInfo.warningType != 'LEVEL4' ?
+                            <div>
+                            </div>
+                            :
+                            <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
+                                <div style={{ fontSize: textFontSize }}>告警信息：</div>
+                                <div style={{ color: '#259b24', fontSize: textFontSize,width:250 }}>{warning}<img src={require('./warning.png')} height={textFontSize} width={textFontSize} style={{ visibility: this.state.showWarningImg }} /></div>
+                            </div>
+                    }
+                </div>
+                <div className='flex flex-direction-column fillParent flex-justify-content-space-between'>
+                    <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
+                        <div style={{ fontSize: textFontSize }}>合格值：</div>
                         <div style={{ fontSize: textFontSize }}>{this.props.deviceInfo.ner + '%/d'}</div>
+                    </div>
+                    <div className='flex flex-direction-row' style={{ marginLeft: 20 }}>
+                        <div style={{ fontSize: textFontSize }}>预估值：</div>
+                        <div style={{ fontSize: textFontSize }}>{this.state.disRate + '%/d'}</div>
                     </div>
                 </div>
             </div>
@@ -128,11 +126,11 @@ export default class TestHeader extends Component {
                 url: 'getDiscreetValue',
                 params: { cylinderId: this.mId },
                 success: (result) => {
-                    if(result.success){
+                    if (result.success) {
                         this.setState({
-                        disRate: result.content.data
-                       });
-                    }                   
+                            disRate: result.content.data
+                        });
+                    }
                 },
                 fail: (result) => {
 

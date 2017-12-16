@@ -166,7 +166,7 @@ exports.default = _react2.default.createClass({
 
         var progressClassName = '';
         if (!progressed) {
-            if (initializing > 0) progressClassName += ' tloader-progress';
+            // if (initializing > 0) progressClassName += ' tloader-progress';
             if (initializing > 1) progressClassName += ' ed';
         }
 

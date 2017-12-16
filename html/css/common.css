@@ -755,7 +755,7 @@ a:hover
 }
 
 .kuma-calendar-picker.kuma-calendar-picker-placement-bottomLeft{
-    top:inherit!important;
+    /*top:inherit!important;*/
 }
 
 .kuma-page-item:hover{
@@ -813,4 +813,18 @@ a:hover
     white-space: nowrap;
     max-width: 100%;
     padding-right:0px;
+}
+
+.uxicon-biaodanlei-tongyongqingchu {
+    visibility: hidden;
+}
+
+.tabs .am-tabs-horizontal .am-tabs-pane-wrap-active{
+    overflow: hidden !important
+}
+
+.realTime .list-view-section-body{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }

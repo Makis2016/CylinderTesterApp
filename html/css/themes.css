@@ -14,8 +14,8 @@
 .kuma-button-outline:hover,
 .kuma-menu-submenu-title:hover,
 .kuma-menu-item:hover a {
-  background-color:#FF5C00!important;
-  border-color: #FF5C00!important;
+  background-color:#5677FC!important;
+  border-color: #5677FC!important;
   color:#ffffff!important;
 }
 
@@ -24,8 +24,8 @@
 }
 
 .echart-button-click {
-  background-color:#FF5C00;
-  border-color: #FF5C00;
+  background-color:#5677FC;
+  border-color: #5677FC;
   color:#ffffff;
 }
 
@@ -39,10 +39,10 @@
 }
 
 .kuma-tree li a.kuma-tree-node-selected, .kuma-tree li a:hover {
-    color:#FF5C00
+    color:#5677FC
 }
 
-@font-face {
+/*@font-face {
     font-family: 'fzlt';
     src:url('fzlt.ttf') format('truetype');
     font-weight: normal;
@@ -58,4 +58,4 @@
 
 body{
 		font-family: 'fzlt'!important;
-}
+}*/

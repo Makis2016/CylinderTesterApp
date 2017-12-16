@@ -44,15 +44,15 @@ export default class TestEchart extends Component {
                 flowmeter: 0,
                 cumulativeFlowmeter: 0
             },
+            start: 0,
+            end: 50
         };
 
         this.mIndex = 1;
-        console.log(props);
 
     }
 
     componentWillReceiveProps(newProps) {
-        console.log(newProps);
         this._initEchart(newProps);
         this._getTestingProcess(newProps);
     }
@@ -103,18 +103,43 @@ export default class TestEchart extends Component {
                     // data: this.state.yData
                     data: yData
                 }
-            ]
+            ],
+            animation: false,
+            dataZoom: [{
+                type: 'slider',
+                start: this.state.start,
+                end: this.state.end
+            }, {
+                start: 0,
+                end: 100,
+                handleSize: '50%',
+                handleStyle: {
+                    color: '#fff',
+                    shadowBlur: 3,
+                    shadowColor: 'rgba(0, 0, 0, 0.6)',
+                    shadowOffsetX: 2,
+                    shadowOffsetY: 2
+                }
+            }],
         };
 
+        let onEvents = {
+            'datazoom': (value) => this._onDatazoomMove(value)
+        };
+
+        let img = this.props.testingMode == 'CONSTANTPRESSURE' ? Constants.TopologicalGraph_A : Constants.TopologicalGraph_B;
+
         return (
-            <div className='flex flex-direction-column '>
+            <div className='flex flex-direction-column ' style={{ overflowX: 'hidden' }}>
                 <style>
-                    {'.selected {color:#FF7043}'}
+                    {'.selected {color:#FFFFFF}'}
                 </style>
-                <div style={{ width: '100%', display: this.state.isEchartShow ? 'block' : 'none' }}>
+                <div style={{ width: '100%', display: this.state.isEchartShow ? 'block' : 'none', overflowX: 'auto' }}>
                     <ReactEcharts
                         option={option}
                         className='react_for_echarts'
+                       
+                        onEvents={onEvents}
                     />
                     <div className='flex flex-direction-row flex-justify-content-center' style={{ fontSize: 16 }}>
                         <div>{this.state.seriesName + '曲线图'}</div>
@@ -126,37 +151,50 @@ export default class TestEchart extends Component {
                     </div>
                 </div>
                 <div className='flex fillParent flex-direction-column' style={{ width: '100%', display: this.state.isEchartShow ? 'none' : 'block' }}>
-                    <div className='flex flex-direction-row flex-justify-content-center' style={{ marginTop: 35 }}>
-                        <img style={{width:document.body.clientWidth}} src={this.props.testingMode == 'CONSTANTPRESSURE' ? Constants.TopologicalGraph_A : Constants.TopologicalGraph_B} />
+                    <div className='flex flex-direction-row flex-justify-content-center' style={{ background: 'url(' + img + ') no-repeat', height: document.body.clientHeight * 0.3, backgroundSize: 'contain', backgroundPosition: 'center' }}>
+                        {/*<img style={{width:document.body.clientWidth}} src={this.props.testingMode == 'CONSTANTPRESSURE' ? Constants.TopologicalGraph_A : Constants.TopologicalGraph_B} />*/}
                     </div>
-                    <div className='flex flex-direction-column flex-justify-content-center' style={{ marginTop: 15 }}>
-                        <span>入口压力：{this.state.testProcess.p3}</span>
-                        <span>被检件内压力：{this.state.testProcess.p2}</span>
-                        <span>日平均温度：{this.state.testProcess.t2}</span>
-                        <span>瞬时流量：{this.state.testProcess.flowmeter}</span>
-                        <span>累计流量：{this.state.testProcess.cumulativeFlowmeter}</span>
+                    <div className='flex flex-direction-column flex-justify-content-center' style={{ padding: 10 }}>
+                        <div className='flex flex-direction-row flex-justify-content-space-between'>
+                            <span>入口压力：{this.state.testProcess.p3}MPa</span>
+                            <span>被检件内压力：{this.state.testProcess.p2}MPa</span>
+                        </div>
+                        <div className='flex flex-direction-row flex-justify-content-space-between'>
+                            <span>日平均温度：{this.state.testProcess.t2}℃</span>
+                            <span>瞬时流量：{this.state.testProcess.flowmeter}L/min</span>
+                        </div>
+                        <div className='flex flex-direction-row flex-justify-content-space-between'>
+                            <span>累计流量：{this.state.testProcess.cumulativeFlowmeter}L/min</span>
+                        </div>
                     </div>
                 </div>
-                <div className='flex flex-direction-row flex-justify-content-space-around' style={{width:'100%'}}>
-                    <div className='flex flex-direction-column flex-align-items-center selected' ref='flow' style={{ marginTop: 20 }} onClick={() => this._changeEchart(1)} >
+                <div className='flex flex-direction-row flex-justify-content-space-around' style={{ width: '100%', position: 'fixed', bottom: 0, backgroundColor: '#108EE9', height: 43.5, color: '#CCD6FE' }}>
+                    <div className='flex flex-direction-column flex-align-items-center selected' ref='flow' style={{}} onClick={() => this._changeEchart(1)} >
                         <Icon name="zhexiantu" />
-                        <span style={{ whiteSpace: 'nowrap' }}>瞬时流量曲线</span>
+                        <span style={{ whiteSpace: 'nowrap', fontSize: 14 }}>瞬时流量</span>
                     </div>
-                    <div className='flex flex-direction-column flex-align-items-center' ref='test' style={this.props.testStatus != 'STEWING' ? { marginTop: 20 } : styles.disabled} onClick={() => this._changeEchart(2)}>
+                    <div className='flex flex-direction-column flex-align-items-center' ref='test' style={this.props.testStatus != 'STEWING' ? {} : styles.disabled} onClick={() => this._changeEchart(2)}>
                         <Icon name="zhexiantu" />
-                        <span style={{ whiteSpace: 'nowrap' }}>测试蒸发率曲线</span>
+                        <span style={{ whiteSpace: 'nowrap', fontSize: 14 }}>测试蒸发率</span>
                     </div>
-                    <div className='flex flex-direction-column flex-align-items-center' ref='static' style={this.props.testStatus != 'STEWING' ? { marginTop: 20 } : styles.disabled} onClick={() => this._changeEchart(3)}>
+                    <div className='flex flex-direction-column flex-align-items-center' ref='static' style={this.props.testStatus != 'STEWING' ? {} : styles.disabled} onClick={() => this._changeEchart(3)}>
                         <Icon name="zhexiantu" />
-                        <span style={{ whiteSpace: 'nowrap' }}>静态蒸发率曲线</span>
+                        <span style={{ whiteSpace: 'nowrap', fontSize: 14 }}>静态蒸发率</span>
                     </div>
-                    <div className='flex flex-direction-column flex-align-items-center' ref='topological' style={{ marginTop: 20 }} onClick={() => this._changeEchart(4)}>
+                    <div className='flex flex-direction-column flex-align-items-center' ref='topological' style={{}} onClick={() => this._changeEchart(4)}>
                         <Icon name="liucheng" />
-                        <span style={{ whiteSpace: 'nowrap' }}>系统拓扑图</span>
+                        <span style={{ whiteSpace: 'nowrap', fontSize: 14 }}>系统拓扑图</span>
                     </div>
                 </div>
             </div>
         );
+    }
+
+    _onDatazoomMove(value) {
+        this.setState({
+            start: value.start,
+            end: value.end
+        });
     }
 
     _changeEchart(index) {
@@ -275,13 +313,12 @@ export default class TestEchart extends Component {
                     });
                 }
             }
-        });
+        }, false);
     }
 }
 
 const styles = {
     disabled: {
-        marginTop: 20,
         color: '#A6A6A6',
         pointerEvents: 'none'
     }

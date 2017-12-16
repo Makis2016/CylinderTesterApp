@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import Icon from 'uxcore-icon';
 import EmptyData from 'uxcore-empty-data';
-import Formatter from 'uxcore-formatter';
+import { NavBar, Icon, Toast } from 'antd-mobile';
 import { requestAjax } from '../../../utils/requestUtils';
-import DeviceCell from './deviceStatusCell';
 import TestInfo from './testInfo';
 import { getId, getName } from '../../../common/UserStore';
 
@@ -17,7 +15,7 @@ export default class DeviceInfo extends Component {
 
         this.state = {
             statusList: [], // 状态列表
-            id: 0,// 
+            id: props.location.query.cylinderId || 0,// 
             isResult: false,
             lastSyncTime: 0,
             clientHeight: document.body.clientHeight
@@ -34,8 +32,7 @@ export default class DeviceInfo extends Component {
 
         this.isResult = null;
 
-        this._loadDetail(null, null);
-
+        this._loadDetail( this.mId, this.isResult);
     }
 
     componentDidMount() {
@@ -50,23 +47,28 @@ export default class DeviceInfo extends Component {
 
         let deviceName = getName();
 
+        // Toast.loading('Loading...', 30, () => {
+        //     console.log('Load complete !!!');
+        // });
+
+
         return (
-            <div style={{ width: '100%' }} className='flex flex-direction-row'>
-            <style>{'.uxicon-left:before{color:black}'}</style>
-                <div className='flex flex-direction-row flex-align-items-center flex-justify-content-space-between' style={{ height: 50, background: '#F8F8F8', width: '100%', position: 'fixed', zIndex: 1, fontSize: 14, color: '#101010' }}>
-                    <Icon name="left" onClick={() => this._pre()}/>
-                    <div>{deviceName}</div>
-                    <div></div>
-                </div>
+            <div style={{ width: '100%', overflow: 'hidden' }}>
+                <NavBar
+                    mode="dark"
+                    icon={<Icon type="left" />}
+                    onLeftClick={() => this._pre()}
+                >焊接绝热气瓶静态蒸发率测试系统</NavBar>
                 {
                     this.state.id > 0 ?
-                        <div className='flex fillParent' style={{ marginTop: 50, padding: 10 }}>
-                            <TestInfo id={this.state.id} isResult={this.state.isResult} />
+                        <div className='flex fillParent' style={{ overflow: 'auto' }}>
+                            <TestInfo id={this.state.id} isResult={this.state.isResult} deviceId = {getId()} />
                         </div>
                         :
                         <div className='flex fillParent flex-align-items-center flex-justify-content-center' style={{ marginTop: 50, padding: 10 }}>
                             <EmptyData />
                         </div>
+
                 }
             </div>
         );
@@ -76,14 +78,13 @@ export default class DeviceInfo extends Component {
 
         let id = getId();
 
-        if (id) {
+        if (id && this.state.id == 0) {
             requestAjax({
                 url: 'loadDetail',
                 params: { id: id },
                 success: (result) => {
                     let dataList = result.content.data;
                     if (dataList && dataList.length >= 1) {
-
                         let isResult = false;
                         if (this.mId == null && dataList[0].testingStatus == 'EOT') {
                             isResult = true;
@@ -109,9 +110,8 @@ export default class DeviceInfo extends Component {
                             this.isResult = isEOT || isResult;
                         });
                     }
-
                 }
-            });
+            }, false);
         }
     }
 
@@ -123,7 +123,7 @@ export default class DeviceInfo extends Component {
 
     _pre() {
         this.context.router.push({
-            pathname: '/realTime'
+            pathname: '/main'
         });
     }
 }

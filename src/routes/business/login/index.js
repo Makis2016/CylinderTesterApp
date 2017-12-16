@@ -2,10 +2,10 @@ import React from 'react';
 import Form, { InputFormField, Validators, FormRow, OtherFormField } from 'uxcore-form';
 import Button from 'uxcore-button';
 import Message from 'uxcore-message';
+import { NavBar } from 'antd-mobile';
 import Captcha from '../../../components/captcha';
 import { requestAjax } from '../../../utils/requestUtils';
 import { setUserInfo } from '../../../common/UserStore';
-import TabHeader from '../../../components/tabHeader/tabHeader';
 
 /**
  * 用户登录界面
@@ -51,8 +51,10 @@ export default class Index extends React.Component {
         let preBtn = null;
 
         return (
-            <div style={{ height: '100%',width: '100%' }}>
-                <TabHeader leftIcon={preBtn} />
+            <div style={{ height: '100%',width: '100%',background:'#FFFFFF',overflow:'hidden' }}>
+                <NavBar
+                    mode="dark"
+                >焊接绝热气瓶静态蒸发率测试系统</NavBar>
                 <div className="flex fillParent flex-direction-column flex-align-items-center">
                     <div className="flex flex-direction-row flex-justify-content-center">
                         <div className="flex flex-direction-column">
@@ -89,7 +91,6 @@ export default class Index extends React.Component {
                         </div>
                     </div>
                 </div>
-
             </div>
         );
     }
@@ -122,7 +123,7 @@ export default class Index extends React.Component {
                     }
                     // location.href = Host.LOGIN;
                     this.context.router.push({
-                        pathname: '/realtime'
+                        pathname: '/main'
                     });
                 },
                 fail: (result) => {

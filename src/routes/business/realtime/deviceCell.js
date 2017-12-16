@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Dialog from 'uxcore-dialog';
+import { Modal } from 'antd-mobile';
 import './deviceCell.less';
 import { setConfig } from '../../../common/UserStore';
 
@@ -26,24 +26,24 @@ export default class DeviceCell extends Component {
         let onlineImage = device.online ? './resources/images/online.png' : './resources/images/offline.png'; // 在线图片显示
 
         return (
-            <div className='flex' style={{flex:1}} >
+            <div className='flex flex-justify-content-center' style={{ width: '50%' }} >
                 {
                     device.online ?
-                    //<Link to='/deviceInfo' state={{ id: device.id, name: device.deviceName }}>
-                    <div className='flex flex-direction-column flex-justify-content-center' style={styles.main} onClick={() => this._gdeviceInfo(device.id, device.deviceName)}>
-                        <div className='warning' style={styles.icon}><img style={{ display: device.warningType == 'LEVEL4' ? 'inline' : 'none' }} src='./resources/images/warning1.png' /></div>
-                        <div className='flex flex-justify-content-center'><img src='./resources/images/device.png' /></div>
-                        <div className='flex flex-justify-content-center' style={{ marginTop: 10 }}>{device.deviceName}</div>
-                        <div className={device.online ? 'online' : ''} style={styles.icon}><img style={{ width: 20, height: 20 }} src={onlineImage} /></div>
-                    </div>
-                    //</Link>
-                    :
-                   <div className='flex flex-direction-column flex-justify-content-center' style={styles.main} onClick={() => this._showOnlineDialog()}>
-                        <div className='warning' style={styles.icon}><img style={{ display: device.warningType == 'LEVEL4' ? 'inline' : 'none' }} src='./resources/images/warning1.png' /></div>
-                        <div className='flex flex-justify-content-center'><img src='./resources/images/device.png' /></div>
-                        <div className='flex flex-justify-content-center' style={{ marginTop: 10 }}>{device.deviceName}</div>
-                        <div className={device.online ? 'online' : ''} style={styles.icon}><img style={{ width: 20, height: 20 }} src={onlineImage} /></div>
-                    </div>
+                        //<Link to='/deviceInfo' state={{ id: device.id, name: device.deviceName }}>
+                        <div className='flex flex-direction-column flex-justify-content-center' style={styles.main} onClick={() => this._gdeviceInfo(device.id, device.deviceName)}>
+                            <div className='warning' style={styles.icon}><img style={{ display: device.warningType == 'LEVEL4' ? 'inline' : 'none' }} src='./resources/images/warning1.png' /></div>
+                            <div className='flex flex-justify-content-center'><img src='./resources/images/device.png' /></div>
+                            <div className='flex flex-justify-content-center' style={{ marginTop: 10 }}>{device.deviceName}</div>
+                            <div className={device.online ? 'online' : ''} style={styles.icon}><img style={{ width: 20, height: 20 }} src={onlineImage} /></div>
+                        </div>
+                        //</Link>
+                        :
+                        <div className='flex flex-direction-column flex-justify-content-center' style={styles.main} onClick={() => this._showOnlineDialog()}>
+                            <div className='warning' style={styles.icon}></div>
+                            <div className='flex flex-justify-content-center'><img src='./resources/images/device.png' /></div>
+                            <div className='flex flex-justify-content-center' style={{ marginTop: 10 }}>{device.deviceName}</div>
+                            <div className={device.online ? 'online' : ''} style={styles.icon}><img style={{ width: 20, height: 20 }} src={onlineImage} /></div>
+                        </div>
                 }
 
             </div>
@@ -57,7 +57,8 @@ export default class DeviceCell extends Component {
     _gdeviceInfo(id, name) {
         setConfig(id, name, null);
         this.context.router.push({
-            pathname: '/deviceInfo'
+            pathname: '/deviceInfo',
+            query:{'index':0}
         });
     }
 
@@ -66,11 +67,7 @@ export default class DeviceCell extends Component {
      * 
      */
     _showOnlineDialog() {
-        Dialog.info({
-            title: '提示',
-            content: '该设备处于离线状态',
-            onOk: function () { }
-        });
+        Modal.alert('提示', '该设备处于离线状态', [{text:'确定'}], 'ios');
     }
 }
 
@@ -82,8 +79,8 @@ const styles = {
         borderRadius: '10%',
         // marginRight: 30,
         // marginBottom: 10,
-        margin:20,
-        width:'100%'
+        margin: 10,
+        width: '70%'
     },
     icon: {
         marginRight: 5,

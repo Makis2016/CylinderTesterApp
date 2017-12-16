@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Icon from 'uxcore-icon';
 import EmptyData from 'uxcore-empty-data';
+import { NavBar,Icon  } from 'antd-mobile';
 import TestInfo from './testInfo';
 import { getId, getName, getTime } from '../../../common/UserStore';
 
@@ -39,16 +39,16 @@ export default class TestEndInfo extends Component {
         let id = getId();
 
         return (
-            <div style={{ width: '100%' }} className='flex flex-direction-row'>
+            <div style={{ width: '100%',overflow:'hidden' }}>
                 <style>{'.uxicon-left:before{color:black}'}</style>
-                <div className='flex flex-direction-row flex-align-items-center flex-justify-content-space-between' style={{ height: 50, background: '#F8F8F8', width: '100%', position: 'fixed', zIndex: 1, fontSize: 14, color: '#101010' }}>
-                    <Icon name="left" onClick={() => this._pre()}/>
-                    <div>{deviceName}</div>
-                    <div></div>
-                </div>
+                 <NavBar
+                    mode="dark"
+                    icon={<Icon type="left" />}
+                    onLeftClick={() => this._pre()}
+                >焊接绝热气瓶静态蒸发率测试系统</NavBar>
                 {
                     id > 0 ?
-                        <div className='flex fillParent' style={{ marginTop: 50, padding: 10 }}>
+                        <div className='flex fillParent'>
                             <TestInfo id={id} isResult={true} />
                         </div>
                         :
@@ -62,7 +62,7 @@ export default class TestEndInfo extends Component {
 
     _pre() {
         this.context.router.push({
-            pathname: '/report'
+            pathname: '/main'
         });
     }
 }

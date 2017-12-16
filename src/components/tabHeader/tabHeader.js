@@ -35,7 +35,7 @@ export default class TabHeader extends React.Component {
         }
 
         return (
-            <div className='flex flex-direction-row flex-align-items-center flex-justify-content-space-between flex-shrink-0' style={{ backgroundColor: '#F8F8F8', height: 65,borderBottom:'1px solid' }}>
+            <div className='flex flex-direction-row flex-align-items-center flex-justify-content-space-between flex-shrink-0' style={{ backgroundColor: '#F8F8F8', height: 50,borderBottom:'1px solid' }}>
 
                 <div className='flex flex-align-items-center' style={this.props.leftIcon ==null ?{}:styles.hasLeftBtn}>
                     {leftIcon}

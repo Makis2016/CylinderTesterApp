@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import Message from 'uxcore-message';
-import Form, { FormRow, InputFormField, OtherFormField, CascadeSelectFormField } from 'uxcore-form';
-import Button from 'uxcore-button';
+import ReactDOM from 'react-dom';
+import { NavBar, Button, InputItem, Picker, List, Flex, WhiteSpace, ListView, PullToRefresh } from 'antd-mobile';
 import DeviceCell from './deviceCell';
 import { requestAjax } from '../../../utils/requestUtils';
-import TabHeader from '../../../components/tabHeader/tabHeader';
-import CheckableListView from '../../../components/listview/checkableListView';
-import Footer from '../../../components/footer/footer';
 
+const NUM_ROWS = 20;
+let pageIndex = 1;
 /**
  * 实时数据
  * 
@@ -16,75 +14,188 @@ export default class Index extends Component {
     constructor(props) {
         super(props);
 
+        const dataSource = new ListView.DataSource({
+            rowHasChanged: (row1, row2) => row1 !== row2,
+        });
         this.state = {
-            deviceList: [],
-            Date: new Date(),
-            totalCount: 0,
-            currentPage: 1,
-            pageSize: 10,
             areaData: {},
-            alarmCount: 0,
-            firstLoad: true,
-            clientwidth: document.body.clientWidth
+            pickerValue: '',
+            dataSource,
+            refreshing: true,
+            isLoading: true,
+            height: document.documentElement.clientHeight,
+            useBodyScroll: false,
+            hasMore: true,
+            bottomHeight: 40
         };
 
         this._getAreas();
         this.mAreaId;
         this.deviceName;
 
-        // this.mTimerList = setInterval(() => {
-        //     // this._selectDeviceList();
-        //     this._getWarningCount();
-        // }, 1000);
+        this.arr = [];
     }
 
-    componentWillUnmount() {
-        clearInterval(this.mTimerList);
+    componentDidUpdate() {
+        document.body.style.overflow = 'hidden';
+    }
+
+    componentDidMount() {
+        const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop;
+        this._fetchData();
+        this.setState({
+            height: hei,
+        });
+    }
+
+    onRefresh = () => {
+        this.setState({ refreshing: true, isLoading: true });
+        // simulate initial Ajax
+        pageIndex = 1;
+        this._fetchData();
+    };
+
+    onEndReached = (event) => {
+        if (this.state.isLoading || !this.state.hasMore) {
+            return;
+        }
+        this.setState({ isLoading: true });
+        this._fetchData(++pageIndex);
+    };
+
+    _fetchData(page = 1) {
+        if (page != 1) {
+            requestAjax({
+                url: 'selectDeviceList',
+                params: { area: this.mAreaId, currentPage: page, pageSize: NUM_ROWS, deviceName: this.deviceName },
+                success: (result) => {
+                    if (result.success) {
+                        this.arr = result.content.data;
+                        this.rData = [...this.rData, ...this.arr];
+                        if ((page * NUM_ROWS) >= result.content.totalCount) {
+                            this.setState({
+                                hasMore: false,
+                                dataSource: this.state.dataSource.cloneWithRows(this.rData),
+                                isLoading: false,
+                                refreshing: false,
+                                bottomHeight: Math.ceil(result.content.totalCount/2) * 150  > this.state.height ? 40 : this.state.height - Math.ceil(result.content.totalCount/2) * 150 - 80  
+                            });
+                        } else {
+                            this.setState({
+                                hasMore: true,
+                                dataSource: this.state.dataSource.cloneWithRows(this.rData),
+                                isLoading: false,
+                                refreshing: false,
+                                bottomHeight: Math.ceil(result.content.totalCount/2) * 150  > this.state.height ? 40 : this.state.height - Math.ceil(result.content.totalCount/2) * 150  - 80                                 
+                            });
+                        }
+                    }
+                },
+                fail: (result) => {
+                }
+            }, false);
+        } else {
+            requestAjax({
+                url: 'selectDeviceList',
+                params: { area: this.mAreaId, currentPage: page, pageSize: NUM_ROWS, deviceName: this.deviceName },
+                success: (result) => {
+                    if (result.success) {
+                        this.arr = result.content.data;
+                        this.rData = result.content.data;
+                        if ((page * NUM_ROWS) >= result.content.totalCount) {
+                            this.setState({
+                                hasMore: false,
+                                dataSource: this.state.dataSource.cloneWithRows(this.arr),
+                                isLoading: false,
+                                refreshing: false,
+                                bottomHeight: Math.ceil(result.content.totalCount/2) * 150 > this.state.height ? 40 : this.state.height - Math.ceil(result.content.totalCount/2) * 150 - 80                               
+                            });
+                        } else {
+                            this.setState({
+                                hasMore: true,
+                                dataSource: this.state.dataSource.cloneWithRows(this.arr),
+                                isLoading: false,
+                                refreshing: false,
+                                bottomHeight: Math.ceil(result.content.totalCount/2) * 150  > this.state.height ? 40 : this.state.height - Math.ceil(result.content.totalCount/2) * 150 - 80                                  
+                            });
+                        }
+                    }
+                    console.log(this.state.bottomHeight);
+                },
+                fail: (result) => {
+                }
+            }, false);
+        }
     }
 
     render() {
-        let deviceList = [];
-        for (let data in this.state.deviceList) {
-            deviceList.push(<DeviceCell device={this.state.deviceList[data]} />);
-        }
 
-        let preBtn = null;
-        let cWidth = (this.state.clientwidth - 150) / 3;
+        const row = (rowData) => {
+            return (
+                <DeviceCell device={rowData} />
+            );
+        };
+
+        let district = this.state.areaData.children;
 
         return (
             <div style={{ width: '100%', overflow: 'hidden' }}>
-                <TabHeader leftIcon={preBtn} />
-                <style>{'.searchRow{margin-left:40px}'}</style>
-                <div className='flex flex-direction-column height-hundred-percent' style={{ marginTop: 15 }}>
-                    <div className='flex flex-direction-column flex-justify-content-center' style={{borderBottom:'1px solid'}}>
-                        <Form ref="searchForm" >
-                            <FormRow>
-                                <CascadeSelectFormField jsxstyle={{ width: cWidth }} jsxlabel="区域" jsxname="city" jsxdata={this.state.areaData} jsxplaceholder={['省', '市', '区']} />
-                            </FormRow>
-                            <FormRow className='searchRow'>
-                                <InputFormField jsxname="deviceName" jsxlabel="设备名称" jsxshowLabel={false} jsxplaceholder="输入设备名称进行查询" />
-                                <OtherFormField className="searchButton">
-                                    <Button onClick={() => this._handleSearch()}>查询</Button>
-                                    <Button onClick={() => this._refresh()}>清空</Button>
-                                </OtherFormField>
-                            </FormRow>
-                        </Form>
+                <NavBar
+                    mode="dark"
+                >焊接绝热气瓶静态蒸发率测试系统</NavBar>
+                <style>{'.area .am-list-extra{flex-basis: 50% !important;}'}</style>
+                <div className='flex flex-direction-column height-hundred-percent'>
+                    <div className='flex flex-direction-column flex-justify-content-center' style={{ height: 125, padding: 10 }}>
+                        <Flex>
+                            <Flex.Item>
+                                <Picker
+                                    visible={this.state.visible}
+                                    data={district}
+                                    value={this.state.pickerValue}
+                                    onChange={(v) => { this._pickerChange(v); }}
+                                    onOk={() => this.setState({ visible: false })}
+                                    onDismiss={() => this.setState({ visible: false })}
+                                >
+                                    <List.Item className='area' onClick={() => this.setState({ visible: true })}>
+                                        地区
+                                    </List.Item>
+                                </Picker>
+                            </Flex.Item>
+                        </Flex>
+                        <WhiteSpace size="lg" />
+                        <Flex justify={'center'} align={'center'} alignContent={'between'}>
+                            <div style={{ width: '75%' }}>
+                                <InputItem ref='deviceName' placeholder="输入设备名称进行查询" />
+                            </div>
+                            <Flex.Item>
+                                <Button type="primary" size="large" inline={true} style={{ height: 44, lineHeight: '44px', color: '#ffffff' }} onClick={() => this._handleSearch()}>搜索</Button>
+                            </Flex.Item>
+                        </Flex>
                     </div>
                     <div className='flex flex-direction-column' style={{ overflow: 'auto', width: '100%' }}>
                         <div>
-                            <CheckableListView
-                                ref='listview'
-                                columns={2}
-                                firstLoad={this.state.firstLoad}
-                                onFetch={(page, resolve, reject) => this._onFetch(page, resolve, reject)}
-                                renderCell={(cellId, cellData) => this._renderCell(cellId, cellData)}
-                                style={{ height: document.body.clientHeight }}
-                            >
-                            </CheckableListView>
-                            <div style={{ height: 70 }}></div>
-                            <Footer
-                                index={1}
-                                alarmCount={this.state.alarmCount}
+                            <ListView
+                                className='realTime'
+                                key={this.state.useBodyScroll ? '0' : '1'}
+                                ref={el => this.lv = el}
+                                dataSource={this.state.dataSource}
+                                renderFooter={() => (<div style={{ marginBottom: 40, textAlign: 'center',height:this.state.bottomHeight }}>
+                                    {this.state.isLoading ? '正在加载...' : this.state.hasMore ? '上拉加载数据' : '没有更多数据'}
+                                </div>)}
+                                renderRow={row}
+                                useBodyScroll={this.state.useBodyScroll}
+                                style={this.state.useBodyScroll ? {} : {
+                                    height: this.state.height,
+                                    border: '1px solid #ddd',
+                                }}
+                                pullToRefresh={<PullToRefresh
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.onRefresh}
+                                    distanceToRefresh={50}
+                                />}
+                                onEndReached={this.onEndReached}
+                                onEndReachedThreshold={0}
+                                pageSize={20}
                             />
                         </div>
                     </div>
@@ -93,37 +204,16 @@ export default class Index extends Component {
         );
     }
 
-    /**
-     * 获取数据列表
-     * 
-     */
-    _onFetch(page, resolve) {
-        requestAjax({
-            url: 'selectDeviceList',
-            params: { area: this.mAreaId, currentPage: page, pageSize: this.state.pageSize, deviceName: this.deviceName },
-            success: (result) => {
-                if (result.success) {
-                    resolve(result.content.data);
-                    this.setState({
-                        Date: new Date(),
-                        totalCount: result.content.totalCount
-                    });
-                }
-            },
-            fail: (result) => {
-                Message['info'](result.errorMsg);
+    _pickerChange(v) {
+        let value = v;
+        if (v.length > 1) {
+            if (v[v.length - 1] == 0) {
+                v.pop();
             }
-        }, false);
-    }
-
-    /**
-     * 渲染单个Cell
-     * 
-     */
-    _renderCell(cellId, cellData) {
-        return (
-            <DeviceCell device={cellData} />
-        );
+        }
+        this.setState({
+            pickerValue: value
+        });
     }
 
     /**
@@ -136,32 +226,13 @@ export default class Index extends Component {
             method: 'post',
             success: (resp) => {
                 if (resp.success) {
+                    let str = JSON.stringify(resp.content.data).replace(/contents/g, 'children').replace(/text/g, 'label');
                     this.setState({
-                        areaData: resp.content.data
+                        areaData: JSON.parse(str)
                     });
                 }
             }
         });
-    }
-
-    /**
-     * 获取告警条数
-     * 
-     */
-    _getWarningCount() {
-        requestAjax({
-            url: 'selectRealTimeWarning',
-            success: (result) => {
-                if (result.success) {
-                    let count = result.content.data.length;
-                    if (count > 0) {
-                        this.setState({
-                            alarmCount: count
-                        });
-                    }
-                }
-            }
-        }, false);
     }
 
     /**
@@ -184,18 +255,13 @@ export default class Index extends Component {
      * 
      */
     _handleSearch() {
-        let data = this.refs.searchForm.getValues().values;
-        let citys = [];
-        let area = 0;
-        if (data.city != undefined) {
-            citys = data.city;
-        }
-        if (citys.length > 0) {
-            area = parseInt(citys[citys.length - 1]);
-        }
-        this.mAreaId = area;
-        this.deviceName = data.deviceName;
 
-        this.refs.listview.reload();
+        let citys = this.state.pickerValue;
+        if (citys.length > 0) {
+            this.mAreaId = citys[citys.length - 1];
+        }
+        this.deviceName = this.refs.deviceName.state.value;
+
+        this.onRefresh();
     }
 } 

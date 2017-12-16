@@ -8,6 +8,9 @@ import History from './routes/business/history';
 import Alarm from './routes/business/alarm';
 import Login from './routes/business/login';
 
+import Main from './routes/business/main';
+import Test from './routes/business/listTest';
+
 /**
  * 路由配置类
  */
@@ -26,6 +29,8 @@ export default class RootRouters extends Component {
                     <Route path="/alarm" component={Alarm} />                                                            
                     <Route path="/testEndInfo" component={TestEndInfo} />     
                     <Route path="/login" component={Login} />     
+                    <Route path="/main" component={Main}/>
+                    <Route path="/test" component={Test}/>                    
                 </Route>
             </Router>
         );

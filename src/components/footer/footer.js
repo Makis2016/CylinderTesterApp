@@ -91,7 +91,7 @@ const styles = {
     footerContainer: {
         position: 'fixed',
         bottom: 0,
-        height: 49,
+        height: 50,
         backgroundColor: '#5677FC',
         width: '100%',
         textAlign: 'center'
